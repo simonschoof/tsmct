@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-jetty")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	runtimeOnly("org.postgresql:postgresql")
@@ -32,6 +33,19 @@ dependencies {
 	testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 	testImplementation("io.kotest:kotest-property:$kotestVersion")
 	testImplementation("io.kotest.extensions:kotest-extensions-spring:$kotestSpringVersion")
+	// Use in tests until fixed: https://github.com/spring-projects/spring-boot/issues/33044
+	testImplementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
+}
+
+configurations {
+	implementation.configure {
+		exclude(module = "spring-boot-starter-tomcat")
+		exclude("org.apache.tomcat")
+	}
+}
+
+extra.apply{
+	set("jakarta-servlet.version", "5.0.0")
 }
 
 tasks.withType<KotlinCompile> {
