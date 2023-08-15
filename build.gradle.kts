@@ -6,6 +6,7 @@ val kotestSpringVersion = "1.1.3"
 plugins {
 	id("org.springframework.boot") version "3.1.2"
 	id("io.spring.dependency-management") version "1.1.2"
+	id("com.adarshr.test-logger") version "3.2.0"
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
 }
@@ -53,6 +54,10 @@ tasks.withType<KotlinCompile> {
 		freeCompilerArgs += "-Xjsr305=strict"
 		jvmTarget = "17"
 	}
+}
+
+testlogger {
+	setTheme("mocha")
 }
 
 tasks.withType<Test> {
