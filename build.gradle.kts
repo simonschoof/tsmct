@@ -45,6 +45,7 @@ configurations {
 	}
 }
 
+// Downgrade until fixed: https://github.com/spring-projects/spring-boot/issues/33044
 extra.apply{
 	set("jakarta-servlet.version", "5.0.0")
 }

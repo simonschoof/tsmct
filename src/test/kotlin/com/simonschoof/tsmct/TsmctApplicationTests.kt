@@ -1,13 +1,9 @@
 package com.simonschoof.tsmct
 
-import io.kotest.core.spec.style.ShouldSpec
+import io.kotest.core.spec.style.FunSpec
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class TsmctApplicationTests: ShouldSpec() {
-
-	init {
-		this.should("load the spring context") {
-		}
-	}
-}
+class TsmctApplicationTests: FunSpec({
+		test("load the spring context") { }
+})
