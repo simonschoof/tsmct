@@ -1,12 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotestVersion = "5.6.2"
+val kotestVersion = "5.7.2"
 val kotestSpringVersion = "1.1.3"
+val ktormVersion = "3.6.0"
 
 plugins {
-	id("org.springframework.boot") version "3.1.2"
-	id("io.spring.dependency-management") version "1.1.2"
+	id("org.springframework.boot") version "3.1.4"
+	id("io.spring.dependency-management") version "1.1.3"
 	id("com.adarshr.test-logger") version "3.2.0"
+	id("org.flywaydb.flyway") version "9.22.1"
+	id("com.github.ben-manes.versions") version "0.48.0"
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
 }
@@ -25,10 +28,19 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-jetty")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	runtimeOnly("org.postgresql:postgresql")
 
+	runtimeOnly("org.postgresql:postgresql")
+	implementation("org.flywaydb:flyway-core:9.22.2")
+	implementation("org.ktorm:ktorm-core:$ktormVersion")
+	implementation("org.ktorm:ktorm-support-postgresql:$ktormVersion")
+	implementation("com.h2database:h2:2.2.224")
+
+
+	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
 	testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
