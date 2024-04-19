@@ -1,24 +1,28 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotestVersion = "5.7.2"
+val kotestVersion = "5.8.1"
 val kotestSpringVersion = "1.1.3"
 val ktormVersion = "3.6.0"
+val embeddedDbSpringTesVersion = "2.5.1"
+val embeddedPostgresVersion = "2.0.7"
+val jacksonKotlinModuleVersion = "2.17.0"
+val postgresqlVersion = "42.7.3"
 
 plugins {
-	id("org.springframework.boot") version "3.1.4"
-	id("io.spring.dependency-management") version "1.1.3"
-	id("com.adarshr.test-logger") version "3.2.0"
-	id("org.flywaydb.flyway") version "9.22.1"
-	id("com.github.ben-manes.versions") version "0.48.0"
-	kotlin("jvm") version "1.8.22"
-	kotlin("plugin.spring") version "1.8.22"
+	id("org.springframework.boot") version "3.2.5"
+	id("io.spring.dependency-management") version "1.1.4"
+	id("com.adarshr.test-logger") version "4.0.0"
+	id("org.flywaydb.flyway") version "10.11.1"
+	id("com.github.ben-manes.versions") version "0.51.0"
+	kotlin("jvm") version "1.9.23"
+	kotlin("plugin.spring") version "1.9.23"
 }
 
 group = "com.simonschoof"
 version = "0.0.1-SNAPSHOT"
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {
@@ -30,15 +34,15 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-jetty")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinModuleVersion")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-	runtimeOnly("org.postgresql:postgresql")
-	implementation("org.flywaydb:flyway-core:9.22.2")
+	runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
+	//implementation("org.flywaydb:flyway-core:9.22.2")
 	implementation("org.ktorm:ktorm-core:$ktormVersion")
 	implementation("org.ktorm:ktorm-support-postgresql:$ktormVersion")
-	implementation("com.h2database:h2:2.2.224")
-
+	implementation("io.zonky.test:embedded-postgres:$embeddedPostgresVersion")
+	testImplementation("io.zonky.test:embedded-database-spring-test:$embeddedDbSpringTesVersion")
 
 	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -46,8 +50,6 @@ dependencies {
 	testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 	testImplementation("io.kotest:kotest-property:$kotestVersion")
 	testImplementation("io.kotest.extensions:kotest-extensions-spring:$kotestSpringVersion")
-	// Use in tests until fixed: https://github.com/spring-projects/spring-boot/issues/33044
-	testImplementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
 }
 
 configurations {
@@ -57,15 +59,10 @@ configurations {
 	}
 }
 
-// Downgrade until fixed: https://github.com/spring-projects/spring-boot/issues/33044
-extra.apply{
-	set("jakarta-servlet.version", "5.0.0")
-}
-
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs += "-Xjsr305=strict"
-		jvmTarget = "17"
+		jvmTarget = "21"
 	}
 }
 
