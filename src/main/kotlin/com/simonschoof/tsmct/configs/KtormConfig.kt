@@ -11,10 +11,6 @@ import javax.sql.DataSource
 class KtormConfig(private val dataSource: DataSource) {
     @Bean
     fun database(): Database {
-//        val pg = EmbeddedPostgres.builder().setPort(5432).start()
-//        val embeddedDataSource = pg.postgresDatabase
-//        val db = Database.connectWithSpringSupport(embeddedDataSource, PostgreSqlDialect())
-//        return db
         return Database.connectWithSpringSupport(dataSource, PostgreSqlDialect())
     }
 }
