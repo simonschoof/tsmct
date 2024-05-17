@@ -1,7 +1,6 @@
 package com.simonschoof.tsmct.infrastructure
 
 import org.ktorm.schema.Table
-import org.ktorm.schema.int
 import org.ktorm.schema.long
 import org.ktorm.schema.timestamp
 import org.ktorm.schema.uuid
@@ -19,6 +18,5 @@ open class EventTable(alias: String?) : Table<Nothing>(
     val eventType = varchar("event_type")
     val data = jsonb<Any>("data")
     val aggregateUuid = uuid("aggregate_uuid")
-    val version = int("version")
     val timestamp = timestamp("timestamp")
 }

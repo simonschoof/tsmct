@@ -3,7 +3,6 @@ CREATE TABLE event (
             aggregate_uuid UUID,
             event_type VARCHAR(255) NOT NULL,
             data jsonb NOT NULL,
-            version INTEGER NOT NULL,
             timestamp TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
