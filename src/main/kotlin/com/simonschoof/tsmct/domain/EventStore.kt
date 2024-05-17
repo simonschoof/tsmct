@@ -4,5 +4,5 @@ import java.util.UUID
 
 interface EventStore {
     fun saveEvents(aggregateId: UUID, events: Iterable<Event>)
-    fun getEventsForAggregate(aggregateId: UUID)
+    fun getEventsForAggregate(aggregateId: UUID): Iterable<Event>
 }
