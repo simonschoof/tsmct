@@ -1,21 +1,22 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotestVersion = "5.8.1"
+val kotestVersion = "5.9.0"
 val kotestSpringVersion = "1.1.3"
 val ktormVersion = "3.6.0"
 val embeddedDbSpringTesVersion = "2.5.1"
 val embeddedPostgresVersion = "2.0.7"
-val jacksonKotlinModuleVersion = "2.17.0"
+val jacksonKotlinModuleVersion = "2.17.1"
 val postgresqlVersion = "42.7.3"
 val kotlinLoggingVersion = "6.0.9"
-val flywayVersion = "10.11.1"
+val flywayVersion = "10.13.0"
 val flywayTestVersion = "10.0.0"
+val kediatrVersion = "3.0.0"
 
 plugins {
 	id("org.springframework.boot") version "3.2.5"
-	id("io.spring.dependency-management") version "1.1.4"
+	id("io.spring.dependency-management") version "1.1.5"
 	id("com.adarshr.test-logger") version "4.0.0"
-	id("org.flywaydb.flyway") version "10.11.1"
+	id("org.flywaydb.flyway") version "10.13.0"
 	id("com.github.ben-manes.versions") version "0.51.0"
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
@@ -49,6 +50,10 @@ dependencies {
 	implementation("io.zonky.test:embedded-postgres:$embeddedPostgresVersion")
 
 	implementation("io.github.oshai:kotlin-logging:$kotlinLoggingVersion")
+
+	implementation("com.trendyol:kediatr-core:$kediatrVersion")
+	implementation("com.trendyol:kediatr-spring-starter:$kediatrVersion")
+
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
