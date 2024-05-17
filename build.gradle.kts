@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kotestVersion = "5.9.0"
 val kotestSpringVersion = "1.1.3"
-val ktormVersion = "3.6.0"
+val ktormVersion = "4.0.0"
 val embeddedDbSpringTesVersion = "2.5.1"
 val embeddedPostgresVersion = "2.0.7"
 val jacksonKotlinModuleVersion = "2.17.1"
