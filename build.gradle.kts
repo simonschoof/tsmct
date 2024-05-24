@@ -11,6 +11,9 @@ val kotlinLoggingVersion = "6.0.9"
 val flywayVersion = "10.13.0"
 val flywayTestVersion = "10.0.0"
 val kediatrVersion = "3.0.0"
+val reactiveStreamVersion = "1.0.4"
+val reactorCoreVersion = "3.6.6"
+val kotlinxCoroutinesVersion = "1.8.1"
 
 plugins {
 	id("org.springframework.boot") version "3.3.0"
@@ -41,12 +44,12 @@ dependencies {
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinModuleVersion")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.reactivestreams:reactive-streams:1.0.4")
-	implementation("io.projectreactor:reactor-core:3.6.6")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.1")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.1")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.8.1")
+	implementation("org.reactivestreams:reactive-streams:$reactiveStreamVersion")
+	implementation("io.projectreactor:reactor-core:$reactorCoreVersion")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$kotlinxCoroutinesVersion")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$kotlinxCoroutinesVersion")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$kotlinxCoroutinesVersion")
 
 	runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
 	runtimeOnly("org.flywaydb:flyway-database-postgresql:$flywayVersion")
