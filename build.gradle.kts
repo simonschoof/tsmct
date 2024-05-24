@@ -41,6 +41,12 @@ dependencies {
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinModuleVersion")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.reactivestreams:reactive-streams:1.0.4")
+	implementation("io.projectreactor:reactor-core:3.6.6")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.8.1")
 
 	runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
 	runtimeOnly("org.flywaydb:flyway-database-postgresql:$flywayVersion")

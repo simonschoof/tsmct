@@ -11,12 +11,12 @@ private val logger = KotlinLogging.logger {}
 data class Greeting(val id: Long, val content: String)
 
 @RestController
-class HelloWorldController(private val database: Database?) {
+class HelloWorldController(private val database: Database) {
     private val counter = AtomicLong()
 
     @GetMapping("/greeting")
     fun greeting(@RequestParam(value = "name", defaultValue = "World") name: String?): Greeting {
-        logger.info { "Test: ${database?.name}" }
+        logger.info { "Test: ${database.name}" }
         return Greeting(counter.incrementAndGet(), String.format(template, name))
     }
 
