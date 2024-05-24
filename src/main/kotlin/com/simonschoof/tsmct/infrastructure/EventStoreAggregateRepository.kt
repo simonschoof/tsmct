@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component
 @Component
 class EventStoreAggregateRepository<T>(private val eventStore: EventStore) : AggregateRepository<T> {
 
-    override fun save(aggregate: AggregateRoot<T>) {
-        aggregate.id.ifPresent {
-            eventStore.saveEvents(aggregateId = aggregate.id.get(), events = aggregate.changes)
-        }
+    override suspend fun save(aggregate: AggregateRoot<T>) {
+       if (aggregate.id.isPresent) {
+           eventStore.saveEvents(aggregateId = aggregate.id.get(), events = aggregate.changes)
+       }
     }
 
     override fun getById(id: AggregateId): AggregateRoot<T> {

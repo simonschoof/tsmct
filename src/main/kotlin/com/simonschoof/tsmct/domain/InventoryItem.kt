@@ -22,9 +22,9 @@ data class InventoryItem(
     }
 
     companion object {
-        operator fun invoke(inventoryItemName: String): InventoryItem {
+        operator fun invoke(inventoryItemName: String): AggregateRoot<InventoryItem> {
             return InventoryItem(id = Optional.of(UUID.randomUUID()))
-                .applyEvent(InventoryItemCreated(inventoryItemName))
+                .applyChange(InventoryItemCreated(inventoryItemName))
         }
     }
 

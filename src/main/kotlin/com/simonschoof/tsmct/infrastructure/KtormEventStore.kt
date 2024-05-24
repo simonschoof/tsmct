@@ -2,6 +2,7 @@ package com.simonschoof.tsmct.infrastructure
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.simonschoof.tsmct.domain.Event
+import com.simonschoof.tsmct.domain.EventBus
 import com.simonschoof.tsmct.domain.EventStore
 import org.ktorm.database.Database
 import org.ktorm.dsl.desc
@@ -19,12 +20,16 @@ import java.util.UUID
 
 @Component
 class KtormEventStore(private val database: Database,
+                      private val e: EventTable = EventTable.aliased("e"),
                       private val clock: Clock,
                       private val objectMapper: ObjectMapper,
-                      private val e: EventTable = EventTable.aliased("e")) : EventStore {
+                      private val eventBus: EventBus) : EventStore {
 
-    override fun saveEvents(aggregateId: UUID, events: Iterable<Event>) {
-        events.forEach { event: Event -> saveEvent(aggregateId, event) }
+    override suspend fun saveEvents(aggregateId: UUID, events: Iterable<Event>) {
+        events.forEach {
+            event: Event -> saveEvent(aggregateId, event)
+            eventBus.publish(event)
+        }
     }
 
     override fun getEventsForAggregate(aggregateId: UUID): Iterable<Event> =
