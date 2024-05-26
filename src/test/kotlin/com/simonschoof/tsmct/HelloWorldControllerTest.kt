@@ -9,7 +9,7 @@ class HelloWorldControllerTest : FunSpec({
 
     test("greeting should return greeting") {
      // Arrange
-     val sut = HelloWorldController(null)
+     val sut = HelloWorldController()
      val greetee = "tsmct"
      val expected = Greeting(1, "Hello, $greetee!")
 
@@ -22,7 +22,7 @@ class HelloWorldControllerTest : FunSpec({
 
     test("add should return the result of two given integer numbers") {
      // Arrange
-     val sut = HelloWorldController(null)
+     val sut = HelloWorldController()
      val expected = 9
 
      // Act

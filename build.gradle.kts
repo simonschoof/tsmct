@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kotestVersion = "5.9.0"
@@ -80,9 +81,9 @@ configurations {
 }
 
 tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs += "-Xjsr305=strict"
-		jvmTarget = "21"
+	compilerOptions {
+		freeCompilerArgs = listOf("-Xjsr305=strict")
+		jvmTarget = JvmTarget.JVM_21
 	}
 }
 
