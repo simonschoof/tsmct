@@ -1,7 +1,6 @@
 package com.simonschoof.tsmct.domain
 
 import java.util.Optional
-import java.util.UUID
 
 
 data class InventoryItem(
@@ -20,7 +19,7 @@ data class InventoryItem(
 
     companion object {
         operator fun invoke(inventoryItemName: String): InventoryItem {
-            return InventoryItem(id = Optional.of(UUID.randomUUID()))
+            return InventoryItem(id = Optional.of(AggregateId.randomUUID()))
                 .applyChange(InventoryItemCreated(inventoryItemName))
         }
     }

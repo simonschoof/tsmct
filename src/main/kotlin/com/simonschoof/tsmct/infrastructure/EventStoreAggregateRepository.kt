@@ -27,7 +27,7 @@ class EventStoreAggregateRepository<T: AggregateRoot<T>>(private val eventStore:
     }
 
     private inline fun <reified T : Any> instantiateWithAggregateId(aggregateId: AggregateId): T {
-        val createFunction = T::class.members.find { it.name == "create" }
-        return createFunction!!.call(aggregateId) as T
+        val createFunction = T::class.constructors.first()
+        return createFunction.call(aggregateId)
     }
 }

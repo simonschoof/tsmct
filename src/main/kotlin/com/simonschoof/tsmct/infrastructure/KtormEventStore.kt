@@ -1,6 +1,7 @@
 package com.simonschoof.tsmct.infrastructure
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.simonschoof.tsmct.domain.AggregateId
 import com.simonschoof.tsmct.domain.Event
 import com.simonschoof.tsmct.domain.EventBus
 import com.simonschoof.tsmct.domain.EventStore
@@ -16,7 +17,6 @@ import org.ktorm.dsl.where
 import org.springframework.stereotype.Component
 import java.time.Clock
 import java.time.Instant
-import java.util.UUID
 
 @Component
 class KtormEventStore(private val database: Database,
@@ -25,14 +25,14 @@ class KtormEventStore(private val database: Database,
                       private val objectMapper: ObjectMapper,
                       private val eventBus: EventBus) : EventStore {
 
-    override suspend fun saveEvents(aggregateId: UUID, events: Iterable<Event>) {
+    override suspend fun saveEvents(aggregateId: AggregateId, events: Iterable<Event>) {
         events.forEach {
             event: Event -> saveEvent(aggregateId, event)
             eventBus.publish(event)
         }
     }
 
-    override fun getEventsForAggregate(aggregateId: UUID): Iterable<Event> =
+    override fun getEventsForAggregate(aggregateId: AggregateId): Iterable<Event> =
         database.from(e)
                 .select()
                 .where { e.aggregateUuid eq aggregateId }
@@ -43,7 +43,7 @@ class KtormEventStore(private val database: Database,
                     objectMapper.readValue(event, clazz.javaObjectType) as Event
                 }
 
-    private fun saveEvent(aggregateId: UUID, event: Event) {
+    private fun saveEvent(aggregateId: AggregateId, event: Event) {
         database.insert(e) {
              set(e.eventType, event::class.simpleName)
              set(e.aggregateUuid, aggregateId)

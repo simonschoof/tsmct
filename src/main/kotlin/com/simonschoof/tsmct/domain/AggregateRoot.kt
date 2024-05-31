@@ -7,7 +7,7 @@ typealias AggregateId = UUID
 
 interface AggregateRoot<T> {
 
-    val id: Optional<UUID>
+    val id: Optional<AggregateId>
     val changes: MutableList<Event>
 
     fun applyChange(event: Event, isNew: Boolean = true): T {
