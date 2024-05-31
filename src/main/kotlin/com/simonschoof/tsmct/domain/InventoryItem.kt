@@ -13,16 +13,13 @@ data class InventoryItem(
     private val maxQuantity: Int = Int.MAX_VALUE,
 ) : AggregateRoot<InventoryItem> {
 
-    override fun instantiateWithAggregateId(id: AggregateId): AggregateRoot<InventoryItem> =
-        InventoryItem(id = Optional.of(id))
-
     override fun applyEvent(event: Event): InventoryItem = when (event) {
         is InventoryItemCreated -> copy(name = Optional.of(event.name), isActivated = true)
         else -> this
     }
 
     companion object {
-        operator fun invoke(inventoryItemName: String): AggregateRoot<InventoryItem> {
+        operator fun invoke(inventoryItemName: String): InventoryItem {
             return InventoryItem(id = Optional.of(UUID.randomUUID()))
                 .applyChange(InventoryItemCreated(inventoryItemName))
         }

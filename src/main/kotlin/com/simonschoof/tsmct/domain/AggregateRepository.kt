@@ -4,7 +4,7 @@ import java.util.UUID
 
 interface AggregateRepository<T> {
 
-    suspend fun save(aggregate: AggregateRoot<T>)
+    suspend fun save(aggregate: T)
     fun getById(id: UUID): AggregateRoot<T>
 
 }

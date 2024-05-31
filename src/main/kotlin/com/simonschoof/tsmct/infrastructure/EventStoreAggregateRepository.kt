@@ -7,15 +7,15 @@ import com.simonschoof.tsmct.domain.EventStore
 import org.springframework.stereotype.Component
 
 @Component
-class EventStoreAggregateRepository<T>(private val eventStore: EventStore) : AggregateRepository<T> {
+class EventStoreAggregateRepository<T: AggregateRoot<T>>(private val eventStore: EventStore) : AggregateRepository<T> {
 
-    override suspend fun save(aggregate: AggregateRoot<T>) {
+    override suspend fun save(aggregate: T) {
        if (aggregate.id.isPresent) {
            eventStore.saveEvents(aggregateId = aggregate.id.get(), events = aggregate.changes)
        }
     }
 
-    override fun getById(id: AggregateId): AggregateRoot<T> {
+    override fun getById(id: AggregateId): T {
         val aggregate = instantiateWithAggregateId<AggregateRoot<T>>(id)
 
         aggregate.id.ifPresent {
@@ -23,7 +23,7 @@ class EventStoreAggregateRepository<T>(private val eventStore: EventStore) : Agg
             aggregate.loadFromHistory(events)
         }
 
-        return aggregate
+        return aggregate as T
     }
 
     private inline fun <reified T : Any> instantiateWithAggregateId(aggregateId: AggregateId): T {
