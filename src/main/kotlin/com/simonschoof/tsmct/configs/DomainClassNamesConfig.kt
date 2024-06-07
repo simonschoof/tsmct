@@ -10,7 +10,7 @@ import org.springframework.core.type.filter.AssignableTypeFilter
 private const val BASE_PACKAGE = "com.simonschoof.tsmct"
 
 @Configuration
-class ClassPathConfig() {
+class DomainClassNamesConfig() {
     @Bean("AggregateRootClassNames")
     fun aggregateRootClassNames(): Set<String> {
         val provider = ClassPathScanningCandidateComponentProvider(false);

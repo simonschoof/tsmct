@@ -1,6 +1,7 @@
 package io.ko.com.simonschoof.tsmct
 
 import com.simonschoof.tsmct.TsmctApplication
+import com.simonschoof.tsmct.configs.DomainClassNamesConfig
 import com.simonschoof.tsmct.configs.JacksonConfig
 import com.simonschoof.tsmct.configs.KtormConfig
 import com.trendyol.kediatr.spring.KediatRAutoConfiguration
@@ -26,7 +27,8 @@ import java.time.ZoneId
         KtormConfig::class,
         FixedClockConfig::class,
         JacksonConfig::class,
-        KediatRAutoConfiguration::class
+        KediatRAutoConfiguration::class,
+        DomainClassNamesConfig::class
     ]
 )
 abstract class DatabaseSpec(body: FunSpec.() -> Unit) : FunSpec(body)

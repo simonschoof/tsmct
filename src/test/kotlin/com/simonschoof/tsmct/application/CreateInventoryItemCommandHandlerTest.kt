@@ -2,6 +2,8 @@ package io.ko.com.simonschoof.tsmct.application
 
 import com.simonschoof.tsmct.application.CreateInventoryItemCommandHandler
 import com.simonschoof.tsmct.domain.CreateInventoryItem
+import com.simonschoof.tsmct.infrastructure.AggregateQualifiedNameProvider
+import com.simonschoof.tsmct.infrastructure.EventQualifiedNameProvider
 import com.simonschoof.tsmct.infrastructure.EventStoreAggregateRepository
 import com.simonschoof.tsmct.infrastructure.EventTable
 import com.simonschoof.tsmct.infrastructure.KediatorEventBus
@@ -24,7 +26,9 @@ import org.springframework.context.annotation.FilterType
                 CreateInventoryItemCommandHandler::class,
                 EventStoreAggregateRepository::class,
                 KtormEventStore::class,
-                KediatorEventBus::class
+                KediatorEventBus::class,
+                EventQualifiedNameProvider::class,
+                AggregateQualifiedNameProvider::class
             ]
         )
     ]
