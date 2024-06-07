@@ -7,33 +7,35 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.type.filter.AssignableTypeFilter
 
-
-// scan in org.example.package
-//Set<BeanDefinition> components = provider.findCandidateComponents("org/example/package");
-//for (BeanDefinition component : components)
-//{
-//    Class cls = Class.forName(component.getBeanClassName());
-//    // use class cls found
-//}
-
 private const val BASE_PACKAGE = "com.simonschoof.tsmct"
 
 @Configuration
 class ClassPathConfig() {
-    @Bean("AggregateRootBeanNames")
-    fun aggregateRootBeanNames(): List<String> {
+    @Bean("AggregateRootClassNames")
+    fun aggregateRootClassNames(): Set<String> {
         val provider = ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(AssignableTypeFilter(AggregateRoot::class.java));
         val beans = provider.findCandidateComponents(BASE_PACKAGE)
-        return beans.mapNotNull { it.beanClassName }
+        val beansNamesList = beans.mapNotNull { it.beanClassName }
+        val beansNamesSet = beansNamesList.toSet()
+        if (beansNamesList.count() != beansNamesSet.count()) {
+            throw Error("Domain contains aggregates with the same name!")
+        }
+        return beansNamesSet
 
     }
 
-    @Bean("EventBeanNames")
-    fun eventBeanNames(): List<String> {
+    @Bean("EventClassNames")
+    fun eventClassNames(): Set<String> {
         val provider = ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(AssignableTypeFilter(Event::class.java));
         val beans = provider.findCandidateComponents(BASE_PACKAGE)
-        return beans.mapNotNull { it.beanClassName }
+        val beansNamesList = beans.mapNotNull { it.beanClassName }
+        val beansNamesSet = beansNamesList.toSet()
+        if (beansNamesList.count() != beansNamesSet.count()) {
+            throw Error("Domain contains events with the same name! Follow the convention and " +
+                    "prefix the event with the aggregate name")
+        }
+        return beansNamesSet
     }
 }

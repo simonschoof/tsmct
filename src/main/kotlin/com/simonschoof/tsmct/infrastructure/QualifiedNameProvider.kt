@@ -4,22 +4,22 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 
 @Component
-class AggregateQualifiedNameProvider(@Qualifier("AggregateRootBeanNames") private val aggregateRootBeanNames: List<String>) {
+class AggregateQualifiedNameProvider(@Qualifier("AggregateRootClassNames") private val aggregateRootClassNames: Set<String>) {
     fun getQualifiedNameBySimpleName(simpleName: String): String {
-        val qualifiedNames = aggregateRootBeanNames.filter { it.contains(simpleName) }
-        if (qualifiedNames.isEmpty() || qualifiedNames.count() > 1) {
-            throw Error("Multiple definitions for Aggragate name")
+        val qualifiedNames = aggregateRootClassNames.filter { it.contains(simpleName) }
+        if (qualifiedNames.isEmpty()) {
+            throw Error("No aggregate with $simpleName is registered")
         }
         return qualifiedNames.first()
     }
 }
 
 @Component
-class EventQualifiedNameProvider(@Qualifier("EventBeanNames") private val eventBeanNames: List<String>) {
+class EventQualifiedNameProvider(@Qualifier("EventClassNames") private val eventClassNames: Set<String>) {
     fun getQualifiedNameBySimpleName(simpleName: String): String {
-        val qualifiedNames = eventBeanNames.filter { it.contains(simpleName) }
-        if (qualifiedNames.isEmpty() || qualifiedNames.count() > 1) {
-            throw Error("Multiple definitions for Event name")
+        val qualifiedNames = eventClassNames.filter { it.contains(simpleName) }
+        if (qualifiedNames.isEmpty()) {
+            throw Error("No event with $simpleName is registered")
         }
         return qualifiedNames.first()
     }
