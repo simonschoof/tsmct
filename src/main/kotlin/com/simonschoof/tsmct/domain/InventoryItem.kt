@@ -2,7 +2,6 @@ package com.simonschoof.tsmct.domain
 
 import java.util.Optional
 
-
 data class InventoryItem(
     override val id: Optional<AggregateId> = Optional.empty(),
     override val changes: MutableList<Event> = mutableListOf(),
@@ -13,7 +12,11 @@ data class InventoryItem(
 ) : AggregateRoot<InventoryItem> {
 
     override fun applyEvent(event: Event): InventoryItem = when (event) {
-        is InventoryItemCreated -> copy(name = Optional.of(event.name), isActivated = true)
+        is InventoryItemCreated -> copy(id=Optional.of(event.aggregateId), name = Optional.of(event.name), isActivated = true)
+        is InventoryItemNameChanged -> copy(name = Optional.of(event.newName))
+        is InventoryItemsRemoved -> copy(availableQuantity = availableQuantity - event.count)
+        is InventoryItemsCheckedIn -> copy(availableQuantity = availableQuantity + event.count)
+        is InventoryItemDeactivated -> copy(isActivated = false)
         else -> this
     }
 
@@ -23,5 +26,23 @@ data class InventoryItem(
                 .applyChange(InventoryItemCreated(inventoryItemName))
         }
     }
+
+    fun changeName(newName: String): InventoryItem = applyChange(InventoryItemNameChanged(newName))
+
+    fun remove(count: Int): InventoryItem =
+        if (count <= 0 || availableQuantity - count < 0) this
+        else applyChange(InventoryItemsRemoved(count))
+
+    fun checkIn(count: Int): InventoryItem =
+        if (count <= 0 || availableQuantity + count > maxQuantity) this
+        else applyChange(InventoryItemsCheckedIn(count))
+
+    fun changeMaxQuantity(newMaxQuantity: Int): InventoryItem =
+        if (newMaxQuantity <= 0 || newMaxQuantity < availableQuantity) this
+        else applyChange(InventoryItemMaxQuantityChanged(newMaxQuantity))
+
+    fun deactivate(): InventoryItem =
+        if (!isActivated) this
+        else applyChange(InventoryItemDeactivated())
 
 }

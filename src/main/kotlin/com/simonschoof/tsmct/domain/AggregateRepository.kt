@@ -1,8 +1,9 @@
 package com.simonschoof.tsmct.domain
 
-interface AggregateRepository<T> {
+import java.util.Optional
+
+interface AggregateRepository<T: AggregateRoot<T>> {
 
     suspend fun save(aggregate: T)
-    fun getById(id: AggregateId): AggregateRoot<T>
-
+    fun getById(id: AggregateId): Optional<T>
 }

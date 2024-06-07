@@ -1,0 +1,18 @@
+meta {
+  name: ChangeInventoryItemName
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/changeInventoryItemName
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "aggregateId": "4b2daa74-175b-47aa-b4cf-c523491f37d3",
+    "newInventoryItemName": "newName"
+  }
+}

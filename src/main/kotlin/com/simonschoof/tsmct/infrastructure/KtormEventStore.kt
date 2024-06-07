@@ -19,36 +19,44 @@ import java.time.Clock
 import java.time.Instant
 
 @Component
-class KtormEventStore(private val database: Database,
-                      private val e: EventTable = EventTable.aliased("e"),
-                      private val clock: Clock,
-                      private val objectMapper: ObjectMapper,
-                      private val eventBus: EventBus) : EventStore {
+class KtormEventStore(
+    private val database: Database,
+    private val e: EventTable = EventTable.aliased("e"),
+    private val clock: Clock,
+    private val objectMapper: ObjectMapper,
+    private val eventBus: EventBus,
+    private val eventQualifiedNameProvider: EventQualifiedNameProvider
+) : EventStore {
 
-    override suspend fun saveEvents(aggregateId: AggregateId, events: Iterable<Event>) {
-        events.forEach {
-            event: Event -> saveEvent(aggregateId, event)
+    override suspend fun saveEvents(aggregateId: AggregateId, aggregateType: String, events: Iterable<Event>) {
+        events.forEach { event: Event ->
+            saveEvent(aggregateId, aggregateType, event)
             eventBus.publish(event)
         }
     }
 
     override fun getEventsForAggregate(aggregateId: AggregateId): Iterable<Event> =
         database.from(e)
-                .select()
-                .where { e.aggregateUuid eq aggregateId }
-                .orderBy(e.timestamp.desc())
-                .map {
-                    val clazz = Class.forName(it[e.eventType]!!).kotlin
-                    val event = it[e.data]!! as String
-                    objectMapper.readValue(event, clazz.javaObjectType) as Event
-                }
+            .select()
+            .where { e.aggregateUuid eq aggregateId }
+            .orderBy(e.timestamp.desc())
+            .map {
+                val clazz = Class.forName(eventQualifiedNameProvider.getQualifiedNameBySimpleName(it[e.eventType]!!)).kotlin
+                val eventString = objectMapper.writeValueAsString(it[e.data]!! as LinkedHashMap<*, *>)
+                val event = objectMapper.readValue(eventString, clazz.javaObjectType) as Event
+                event.aggregateType = it[e.aggregateType]!!
+                event.timestamp = it[e.timestamp]!!
+                event.aggregateId = it[e.aggregateUuid]!!
+                event
+            }
 
-    private fun saveEvent(aggregateId: AggregateId, event: Event) {
+    private fun saveEvent(aggregateId: AggregateId, aggregateType: String, event: Event) {
         database.insert(e) {
-             set(e.eventType, event::class.simpleName)
-             set(e.aggregateUuid, aggregateId)
-             set(e.timestamp, Instant.now(clock))
-             set(e.data, event)
-         }
+            set(e.eventType, event::class.simpleName)
+            set(e.aggregateUuid, aggregateId)
+            set(e.aggregateType, aggregateType)
+            set(e.timestamp, Instant.now(clock))
+            set(e.data, event)
+        }
     }
 }

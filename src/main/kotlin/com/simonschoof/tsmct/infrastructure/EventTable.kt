@@ -15,6 +15,7 @@ open class EventTable(alias: String?) : Table<Nothing>(
 
     override fun aliased(alias: String) = EventTable(alias)
     val id = long("id").primaryKey()
+    val aggregateType = varchar("aggregate_type")
     val eventType = varchar("event_type")
     val data = jsonb<Any>("data")
     val aggregateUuid = uuid("aggregate_uuid")

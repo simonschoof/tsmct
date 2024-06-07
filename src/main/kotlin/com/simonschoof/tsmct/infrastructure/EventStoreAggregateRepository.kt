@@ -5,29 +5,40 @@ import com.simonschoof.tsmct.domain.AggregateRepository
 import com.simonschoof.tsmct.domain.AggregateRoot
 import com.simonschoof.tsmct.domain.EventStore
 import org.springframework.stereotype.Component
+import java.util.Optional
+
 
 @Component
-class EventStoreAggregateRepository<T: AggregateRoot<T>>(private val eventStore: EventStore) : AggregateRepository<T> {
+class EventStoreAggregateRepository<T : AggregateRoot<T>>(
+    private val eventStore: EventStore,
+    private val aggregateQualifiedNameProvider: AggregateQualifiedNameProvider
+) : AggregateRepository<T> {
 
     override suspend fun save(aggregate: T) {
-       if (aggregate.id.isPresent) {
-           eventStore.saveEvents(aggregateId = aggregate.id.get(), events = aggregate.changes)
-       }
+        if (aggregate.id.isPresent) {
+            eventStore.saveEvents(
+                aggregateId = aggregate.id.get(),
+                aggregateType = aggregate.aggregateType(),
+                events = aggregate.changes
+            )
+        }
     }
 
-    override fun getById(id: AggregateId): T {
-        val aggregate = instantiateWithAggregateId<AggregateRoot<T>>(id)
+    override fun getById(id: AggregateId): Optional<T> {
 
-        aggregate.id.ifPresent {
-            val events = eventStore.getEventsForAggregate(aggregate.id.get())
-            aggregate.loadFromHistory(events)
+        val events = eventStore.getEventsForAggregate(id)
+
+        if (events.count() == 0) {
+            return Optional.empty()
         }
 
-        return aggregate as T
+        val emptyAggregate =
+            Class.forName(aggregateQualifiedNameProvider.getQualifiedNameBySimpleName(events.first().aggregateType))
+                .kotlin.java.getDeclaredConstructor().newInstance() as T
+
+        val aggregate = emptyAggregate.loadFromHistory(events)
+
+        return Optional.of(aggregate)
     }
 
-    private inline fun <reified T : Any> instantiateWithAggregateId(aggregateId: AggregateId): T {
-        val createFunction = T::class.constructors.first()
-        return createFunction.call(aggregateId)
-    }
 }
