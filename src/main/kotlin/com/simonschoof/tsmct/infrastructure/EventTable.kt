@@ -18,6 +18,6 @@ open class EventTable(alias: String?) : Table<Nothing>(
     val aggregateType = varchar("aggregate_type")
     val eventType = varchar("event_type")
     val data = jsonb<Any>("data")
-    val aggregateUuid = uuid("aggregate_uuid")
+    val aggregateId = uuid("aggregate_id")
     val timestamp = timestamp("timestamp")
 }

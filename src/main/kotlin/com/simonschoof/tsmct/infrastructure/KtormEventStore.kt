@@ -38,7 +38,7 @@ class KtormEventStore(
     override fun getEventsForAggregate(aggregateId: AggregateId): Iterable<Event> =
         database.from(e)
             .select()
-            .where { e.aggregateUuid eq aggregateId }
+            .where { e.aggregateId eq aggregateId }
             .orderBy(e.timestamp.desc())
             .map {
                 val clazz = Class.forName(eventQualifiedNameProvider.getQualifiedNameBySimpleName(it[e.eventType]!!)).kotlin
@@ -50,7 +50,7 @@ class KtormEventStore(
     private fun saveEvent(aggregateId: AggregateId, aggregateType: String, event: Event) {
         database.insert(e) {
             set(e.eventType, event::class.simpleName)
-            set(e.aggregateUuid, aggregateId)
+            set(e.aggregateId, aggregateId)
             set(e.aggregateType, aggregateType)
             set(e.timestamp, Instant.now(clock))
             set(e.data, event)
