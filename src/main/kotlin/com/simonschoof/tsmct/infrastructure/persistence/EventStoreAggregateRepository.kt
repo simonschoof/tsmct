@@ -30,7 +30,7 @@ class EventStoreAggregateRepository<T : AggregateRoot<T>>(
 
         val events = eventStore.getEventsForAggregate(id)
 
-        if (events.count() == 0) {
+        if (events.isEmpty()) {
             return Optional.empty()
         }
 
