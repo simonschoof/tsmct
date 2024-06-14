@@ -1,5 +1,6 @@
 package com.simonschoof.tsmct.domain
 
+import java.time.Instant
 import java.util.Optional
 import java.util.UUID
 
@@ -25,6 +26,16 @@ interface AggregateRoot<T> {
     }
 
     fun loadFromHistory(history: Iterable<Event>): T {
-        return history.fold(initial = this, operation = ( { acc: AggregateRoot<T>, event: Event  -> acc.applyChange(event, false) as AggregateRoot<T> })) as T
+        return history.fold(
+            initial = this,
+            operation = ({ acc: AggregateRoot<T>, event: Event -> acc.applyChange(event, false) as AggregateRoot<T> })
+        ) as T
     }
+
 }
+
+fun <T> AggregateRoot<T>.baseEventInfo(): BaseEventInfo = BaseEventInfo(
+    aggregateId = this.id.get(),
+    aggregateType = this.aggregateType(),
+    timestamp = Instant.now()
+)

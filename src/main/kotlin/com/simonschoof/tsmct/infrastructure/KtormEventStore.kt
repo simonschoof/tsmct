@@ -44,9 +44,6 @@ class KtormEventStore(
                 val clazz = Class.forName(eventQualifiedNameProvider.getQualifiedNameBySimpleName(it[e.eventType]!!)).kotlin
                 val eventString = objectMapper.writeValueAsString(it[e.data]!! as LinkedHashMap<*, *>)
                 val event = objectMapper.readValue(eventString, clazz.javaObjectType) as Event
-                event.aggregateType = it[e.aggregateType]!!
-                event.timestamp = it[e.timestamp]!!
-                event.aggregateId = it[e.aggregateUuid]!!
                 event
             }
 

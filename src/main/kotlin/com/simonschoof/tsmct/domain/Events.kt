@@ -1,23 +1,32 @@
 package com.simonschoof.tsmct.domain
 
 data class InventoryItemCreated(
+    override val baseEventInfo: BaseEventInfo,
     val name: String
-) : Event()
+) : Event
 
 data class InventoryItemNameChanged(
+    override val baseEventInfo: BaseEventInfo,
     val newName: String
-): Event()
+) : Event
 
 data class InventoryItemsRemoved(
-    val count: Int
-): Event()
+override val baseEventInfo: BaseEventInfo,
+    val count: Int,
+    val newAvailableQuantity: Int
+) : Event
 
 data class InventoryItemsCheckedIn(
-    val count: Int
-): Event()
+override val baseEventInfo: BaseEventInfo,
+    val count: Int,
+    val newAvailableQuantity: Int
+) : Event
 
 data class InventoryItemMaxQuantityChanged(
+override val baseEventInfo: BaseEventInfo,
     val newMaxQuantity: Int
-): Event()
+) : Event
 
-class InventoryItemDeactivated : Event()
+class InventoryItemDeactivated(
+override val baseEventInfo: BaseEventInfo,
+) : Event
