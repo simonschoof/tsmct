@@ -33,7 +33,7 @@ interface AggregateRoot<T> {
         ) as T
     }
 
-    fun baseEventInfo(isNew: Boolean =false): BaseEventInfo = BaseEventInfo(
+    fun baseEventInfo(isNew: Boolean = false): BaseEventInfo = BaseEventInfo(
         aggregateId = if (isNew) AggregateId.randomUUID() else this.id.get(),
         aggregateType = this.aggregateType(),
         timestamp = Instant.now()
