@@ -34,7 +34,6 @@ import java.time.ZoneId
 abstract class DatabaseSpec(body: FunSpec.() -> Unit) : FunSpec(body)
 
 internal class FixedClockConfig {
-
     @Bean
     fun fixedClock(): Clock = Clock.fixed(Instant.now(), ZoneId.of("UTC"))
 }

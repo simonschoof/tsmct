@@ -38,11 +38,11 @@ class CreateInventoryItemCommandHandlerTest(
     private val database: Database
 ) : DatabaseSpec({
 
-    beforeTest() {
+    beforeTest {
         database.deleteAll(EventTable)
     }
 
-    test("initial commandhandler test") {
+    test("initial command handler test") {
         // arrange
         val command = CreateInventoryItem("test", 5, 10)
 
