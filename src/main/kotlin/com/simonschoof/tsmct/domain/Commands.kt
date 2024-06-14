@@ -13,3 +13,24 @@ data class ChangeInventoryItemName(
     val aggregateId: AggregateId,
     val newName: String
 ): Command
+
+data class RemoveInventoryItems(
+    val aggregateId: AggregateId,
+    val count: Int
+): Command
+
+data class CheckInInventoryItems(
+    val aggregateId: AggregateId,
+    val count: Int
+): Command
+
+data class ChangeMaxQuantity(
+    val aggregateId: AggregateId,
+    val newMaxQuantity: Int
+): Command
+
+data class DeactivateInventoryItem(
+    val aggregateId: AggregateId
+): Command
+
+
