@@ -1,15 +1,15 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotestVersion = "5.9.0"
-val kotestSpringVersion = "1.1.3"
+val kotestVersion = "5.9.1"
+val kotestSpringVersion = "1.3.0"
 val ktormVersion = "4.0.0"
 val embeddedDbSpringTesVersion = "2.5.1"
 val embeddedPostgresVersion = "2.0.7"
 val jacksonKotlinModuleVersion = "2.17.1"
 val postgresqlVersion = "42.7.3"
 val kotlinLoggingVersion = "6.0.9"
-val flywayVersion = "10.13.0"
+val flywayVersion = "10.15.0"
 val flywayTestVersion = "10.0.0"
 val kediatrVersion = "3.0.0"
 val reactiveStreamVersion = "1.0.4"
@@ -20,7 +20,7 @@ plugins {
 	id("org.springframework.boot") version "3.3.0"
 	id("io.spring.dependency-management") version "1.1.5"
 	id("com.adarshr.test-logger") version "4.0.0"
-	id("org.flywaydb.flyway") version "10.13.0"
+	id("org.flywaydb.flyway") version "10.15.0"
 	id("com.github.ben-manes.versions") version "0.51.0"
 	kotlin("jvm") version "2.0.0"
 	kotlin("plugin.spring") version "2.0.0"
