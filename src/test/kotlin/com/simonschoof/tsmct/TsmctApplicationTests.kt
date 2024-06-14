@@ -2,7 +2,7 @@ package com.simonschoof.tsmct
 
 import com.simonschoof.tsmct.application.CreateInventoryItemCommandHandler
 import com.simonschoof.tsmct.domain.CreateInventoryItem
-import com.simonschoof.tsmct.infrastructure.EventTable
+import com.simonschoof.tsmct.infrastructure.persistence.EventTable
 import io.ko.com.simonschoof.tsmct.SpringBootSpec
 import io.kotest.matchers.shouldBe
 import org.ktorm.database.Database

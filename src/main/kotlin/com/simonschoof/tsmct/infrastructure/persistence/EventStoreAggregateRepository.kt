@@ -1,9 +1,10 @@
-package com.simonschoof.tsmct.infrastructure
+package com.simonschoof.tsmct.infrastructure.persistence
 
-import com.simonschoof.tsmct.domain.AggregateId
-import com.simonschoof.tsmct.domain.AggregateRepository
-import com.simonschoof.tsmct.domain.AggregateRoot
-import com.simonschoof.tsmct.domain.EventStore
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateRepository
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateRoot
+import com.simonschoof.tsmct.domain.buildingblocks.EventStore
+import com.simonschoof.tsmct.infrastructure.AggregateQualifiedNameProvider
 import org.springframework.stereotype.Component
 import java.util.Optional
 
@@ -24,6 +25,7 @@ class EventStoreAggregateRepository<T : AggregateRoot<T>>(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun getById(id: AggregateId): Optional<T> {
 
         val events = eventStore.getEventsForAggregate(id)

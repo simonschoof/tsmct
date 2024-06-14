@@ -1,5 +1,10 @@
 package com.simonschoof.tsmct.domain
 
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateRoot
+import com.simonschoof.tsmct.domain.buildingblocks.BaseEventInfo
+import com.simonschoof.tsmct.domain.buildingblocks.Event
+import com.simonschoof.tsmct.domain.buildingblocks.baseEventInfo
 import java.time.Instant
 import java.util.Optional
 

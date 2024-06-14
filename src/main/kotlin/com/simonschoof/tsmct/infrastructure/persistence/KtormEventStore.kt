@@ -1,10 +1,11 @@
-package com.simonschoof.tsmct.infrastructure
+package com.simonschoof.tsmct.infrastructure.persistence
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.simonschoof.tsmct.domain.AggregateId
-import com.simonschoof.tsmct.domain.Event
-import com.simonschoof.tsmct.domain.EventBus
-import com.simonschoof.tsmct.domain.EventStore
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
+import com.simonschoof.tsmct.domain.buildingblocks.Event
+import com.simonschoof.tsmct.domain.buildingblocks.EventBus
+import com.simonschoof.tsmct.domain.buildingblocks.EventStore
+import com.simonschoof.tsmct.infrastructure.EventQualifiedNameProvider
 import org.ktorm.database.Database
 import org.ktorm.dsl.desc
 import org.ktorm.dsl.eq

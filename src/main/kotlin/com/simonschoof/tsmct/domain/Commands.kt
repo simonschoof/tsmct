@@ -1,5 +1,8 @@
 package com.simonschoof.tsmct.domain
 
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
+import com.simonschoof.tsmct.domain.buildingblocks.Command
+
 data class CreateInventoryItem(
     val name: String
 ): Command

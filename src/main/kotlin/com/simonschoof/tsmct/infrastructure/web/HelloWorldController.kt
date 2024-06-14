@@ -1,4 +1,4 @@
-package com.simonschoof.tsmct
+package com.simonschoof.tsmct.infrastructure.web
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.web.bind.annotation.GetMapping

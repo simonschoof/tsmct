@@ -1,4 +1,4 @@
-package com.simonschoof.tsmct.domain
+package com.simonschoof.tsmct.domain.buildingblocks
 
 import java.time.Instant
 import java.util.Optional
@@ -25,6 +25,7 @@ interface AggregateRoot<T> {
         changes.clear()
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun loadFromHistory(history: Iterable<Event>): T {
         return history.fold(
             initial = this,

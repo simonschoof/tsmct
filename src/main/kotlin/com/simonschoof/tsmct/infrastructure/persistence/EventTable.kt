@@ -1,4 +1,4 @@
-package com.simonschoof.tsmct.infrastructure
+package com.simonschoof.tsmct.infrastructure.persistence
 
 import org.ktorm.schema.Table
 import org.ktorm.schema.long

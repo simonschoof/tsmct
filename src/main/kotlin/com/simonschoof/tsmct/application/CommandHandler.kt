@@ -1,9 +1,9 @@
 package com.simonschoof.tsmct.application
 
-import com.simonschoof.tsmct.domain.AggregateRepository
 import com.simonschoof.tsmct.domain.ChangeInventoryItemName
 import com.simonschoof.tsmct.domain.CreateInventoryItem
 import com.simonschoof.tsmct.domain.InventoryItem
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateRepository
 import com.trendyol.kediatr.CommandHandler
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional

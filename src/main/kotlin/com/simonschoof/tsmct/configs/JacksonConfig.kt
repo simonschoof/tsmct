@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.simonschoof.tsmct.domain.AggregateId
-import com.simonschoof.tsmct.domain.Event
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
+import com.simonschoof.tsmct.domain.buildingblocks.Event
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.time.Instant

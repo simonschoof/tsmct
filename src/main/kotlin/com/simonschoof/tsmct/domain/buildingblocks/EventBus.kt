@@ -1,4 +1,4 @@
-package com.simonschoof.tsmct.domain
+package com.simonschoof.tsmct.domain.buildingblocks
 
 interface EventBus {
     suspend fun publish(event: Event)

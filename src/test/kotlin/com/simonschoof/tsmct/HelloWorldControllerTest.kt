@@ -1,7 +1,7 @@
 package io.ko.com.simonschoof.tsmct
 
-import com.simonschoof.tsmct.Greeting
-import com.simonschoof.tsmct.HelloWorldController
+import com.simonschoof.tsmct.infrastructure.web.Greeting
+import com.simonschoof.tsmct.infrastructure.web.HelloWorldController
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 

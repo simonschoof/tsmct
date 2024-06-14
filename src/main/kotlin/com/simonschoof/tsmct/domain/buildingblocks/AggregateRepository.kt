@@ -1,4 +1,4 @@
-package com.simonschoof.tsmct.domain
+package com.simonschoof.tsmct.domain.buildingblocks
 
 import java.util.Optional
 

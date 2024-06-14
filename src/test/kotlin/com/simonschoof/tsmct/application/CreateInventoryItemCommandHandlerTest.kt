@@ -4,10 +4,10 @@ import com.simonschoof.tsmct.application.CreateInventoryItemCommandHandler
 import com.simonschoof.tsmct.domain.CreateInventoryItem
 import com.simonschoof.tsmct.infrastructure.AggregateQualifiedNameProvider
 import com.simonschoof.tsmct.infrastructure.EventQualifiedNameProvider
-import com.simonschoof.tsmct.infrastructure.EventStoreAggregateRepository
-import com.simonschoof.tsmct.infrastructure.EventTable
+import com.simonschoof.tsmct.infrastructure.persistence.EventStoreAggregateRepository
+import com.simonschoof.tsmct.infrastructure.persistence.EventTable
 import com.simonschoof.tsmct.infrastructure.KediatorEventBus
-import com.simonschoof.tsmct.infrastructure.KtormEventStore
+import com.simonschoof.tsmct.infrastructure.persistence.KtormEventStore
 import io.ko.com.simonschoof.tsmct.DatabaseSpec
 import io.kotest.matchers.shouldBe
 import org.ktorm.database.Database

@@ -1,4 +1,4 @@
-package com.simonschoof.tsmct.infrastructure
+package com.simonschoof.tsmct.infrastructure.persistence
 
 import com.fasterxml.jackson.databind.JavaType
 import com.simonschoof.tsmct.configs.objectMapper

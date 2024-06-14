@@ -1,7 +1,7 @@
 package com.simonschoof.tsmct.configs
 
-import com.simonschoof.tsmct.domain.AggregateRoot
-import com.simonschoof.tsmct.domain.Event
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateRoot
+import com.simonschoof.tsmct.domain.buildingblocks.Event
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.context.annotation.Configuration

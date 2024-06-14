@@ -1,8 +1,8 @@
-package com.simonschoof.tsmct
+package com.simonschoof.tsmct.infrastructure.web
 
 import com.simonschoof.tsmct.domain.ChangeInventoryItemName
 import com.simonschoof.tsmct.domain.CreateInventoryItem
-import com.simonschoof.tsmct.domain.EventBus
+import com.simonschoof.tsmct.domain.buildingblocks.EventBus
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping
