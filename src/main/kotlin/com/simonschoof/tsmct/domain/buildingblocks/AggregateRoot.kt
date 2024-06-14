@@ -1,5 +1,6 @@
 package com.simonschoof.tsmct.domain.buildingblocks
 
+import java.time.Clock
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID
@@ -10,6 +11,7 @@ interface AggregateRoot<T> {
 
     val id: Optional<AggregateId>
     val changes: MutableList<Event>
+    val clock: Clock
 
     fun aggregateType(): String = this::class.simpleName!!
 
@@ -36,6 +38,6 @@ interface AggregateRoot<T> {
     fun baseEventInfo(isNew: Boolean = false): BaseEventInfo = BaseEventInfo(
         aggregateId = if (isNew) AggregateId.randomUUID() else this.id.get(),
         aggregateType = this.aggregateType(),
-        timestamp = Instant.now()
+        timestamp =  Instant.now(clock)
     )
 }

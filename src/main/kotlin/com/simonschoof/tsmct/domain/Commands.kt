@@ -4,7 +4,9 @@ import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
 import com.simonschoof.tsmct.domain.buildingblocks.Command
 
 data class CreateInventoryItem(
-    val name: String
+    val name: String,
+    val availableQuantity: Int,
+    val maxQuantity: Int
 ): Command
 
 data class ChangeInventoryItemName(

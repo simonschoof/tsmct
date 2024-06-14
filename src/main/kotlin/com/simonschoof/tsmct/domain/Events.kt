@@ -5,7 +5,9 @@ import com.simonschoof.tsmct.domain.buildingblocks.Event
 
 data class InventoryItemCreated(
     override val baseEventInfo: BaseEventInfo,
-    val name: String
+    val name: String,
+    val availableQuantity: Int,
+    val maxQuantity: Int
 ) : Event
 
 data class InventoryItemNameChanged(

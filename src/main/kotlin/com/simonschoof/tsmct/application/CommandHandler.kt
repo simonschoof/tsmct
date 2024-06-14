@@ -10,21 +10,25 @@ import org.springframework.transaction.annotation.Transactional
 
 @Component
 @Transactional
-class CreateInventoryItemCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>):
+class CreateInventoryItemCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>) :
     CommandHandler<CreateInventoryItem> {
     override suspend fun handle(command: CreateInventoryItem) {
-        val inventoryItem = InventoryItem.invoke(command.name)
+        val inventoryItem = InventoryItem.invoke(
+            inventoryItemName = command.name,
+            availableQuantity = command.availableQuantity,
+            maxQuantity = command.maxQuantity
+        )
         aggregateRepository.save(inventoryItem)
     }
 }
 
 @Component
 @Transactional
-class ChangeInventoryItemNameCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>):
+class ChangeInventoryItemNameCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>) :
     CommandHandler<ChangeInventoryItemName> {
     override suspend fun handle(command: ChangeInventoryItemName) {
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
-        if(inventoryItem.isPresent) {
+        if (inventoryItem.isPresent) {
             aggregateRepository.save(inventoryItem.get().changeName(command.newName))
         }
     }

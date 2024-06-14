@@ -23,7 +23,7 @@ class TsmctApplicationTests(
 
 	test("initial commandhandler test") {
 		// arrange
-		val command = CreateInventoryItem("test")
+		val command = CreateInventoryItem("test", 5, 10)
 
 		// act
 		createInventoryItemCommandHandler.handle(command)

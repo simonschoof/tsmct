@@ -3,11 +3,13 @@ package com.simonschoof.tsmct.domain
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateRoot
 import com.simonschoof.tsmct.domain.buildingblocks.Event
+import java.time.Clock
 import java.util.Optional
 
 data class InventoryItem(
     override val id: Optional<AggregateId> = Optional.empty(),
     override val changes: MutableList<Event> = mutableListOf(),
+    override val clock: Clock = Clock.systemUTC(),
     private val name: Optional<String> = Optional.empty(),
     private val isActivated: Boolean = false,
     private val availableQuantity: Int = 0,
@@ -28,11 +30,17 @@ data class InventoryItem(
     }
 
     companion object {
-        operator fun invoke(inventoryItemName: String): InventoryItem {
-            val inventoryItem = InventoryItem()
+        operator fun invoke(
+            inventoryItemName: String,
+            availableQuantity: Int,
+            maxQuantity: Int,
+            clock: Clock = Clock.systemUTC()): InventoryItem {
+            val inventoryItem = InventoryItem(clock = clock)
             val event = InventoryItemCreated(
                 inventoryItem.baseEventInfo(isNew = true),
-                name = inventoryItemName
+                name = inventoryItemName,
+                availableQuantity = availableQuantity,
+                maxQuantity = maxQuantity
             )
             return inventoryItem.applyChange(event)
         }

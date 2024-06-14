@@ -15,14 +15,19 @@ private val logger = KotlinLogging.logger {}
 @RestController
 class InventoryItemController(private val eventBus: EventBus) {
 
-    data class InventoryItemRequest(val inventoryItemName: String)
+    data class InventoryItemRequest(val inventoryItemName: String, val availableQuantity: Int, val maxQuantity: Int)
 
     @PostMapping(
         value = ["/api/addInventoryItem"],
         consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE])
-    suspend fun addInventoryItem(@RequestBody inventoryItemRequest: InventoryItemRequest){
-        val createInventoryItem = CreateInventoryItem(inventoryItemRequest.inventoryItemName)
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    suspend fun addInventoryItem(@RequestBody inventoryItemRequest: InventoryItemRequest) {
+        val createInventoryItem = CreateInventoryItem(
+            inventoryItemRequest.inventoryItemName,
+            inventoryItemRequest.availableQuantity,
+            inventoryItemRequest.maxQuantity
+        )
         eventBus.send(createInventoryItem)
     }
 
@@ -34,9 +39,13 @@ class InventoryItemController(private val eventBus: EventBus) {
     @PostMapping(
         value = ["/api/changeInventoryItemName"],
         consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE])
-    suspend fun changeInventoryItemName(@RequestBody changeInventoryItemNameRequest: ChangeInventoryItemNameRequest){
-        val changeInventoryItemName = ChangeInventoryItemName(UUID.fromString(changeInventoryItemNameRequest.aggregateId), changeInventoryItemNameRequest.newInventoryItemName)
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    suspend fun changeInventoryItemName(@RequestBody changeInventoryItemNameRequest: ChangeInventoryItemNameRequest) {
+        val changeInventoryItemName = ChangeInventoryItemName(
+            UUID.fromString(changeInventoryItemNameRequest.aggregateId),
+            changeInventoryItemNameRequest.newInventoryItemName
+        )
         eventBus.send(changeInventoryItemName)
     }
 }
