@@ -2,10 +2,7 @@ package com.simonschoof.tsmct.domain
 
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateRoot
-import com.simonschoof.tsmct.domain.buildingblocks.BaseEventInfo
 import com.simonschoof.tsmct.domain.buildingblocks.Event
-import com.simonschoof.tsmct.domain.buildingblocks.baseEventInfo
-import java.time.Instant
 import java.util.Optional
 
 data class InventoryItem(
@@ -32,16 +29,12 @@ data class InventoryItem(
 
     companion object {
         operator fun invoke(inventoryItemName: String): InventoryItem {
+            val inventoryItem = InventoryItem()
             val event = InventoryItemCreated(
-                BaseEventInfo(
-                    aggregateId = AggregateId.randomUUID(),
-                    aggregateType = InventoryItem::class.simpleName!!,
-                    timestamp = Instant.now()
-                ),
+                inventoryItem.baseEventInfo(isNew = true),
                 name = inventoryItemName
             )
-            return InventoryItem()
-                .applyChange(event)
+            return inventoryItem.applyChange(event)
         }
     }
 
