@@ -20,6 +20,8 @@ data class InventoryItem(
         is InventoryItemCreated -> copy(
             id = Optional.of(event.aggregateId),
             name = Optional.of(event.name),
+            availableQuantity = event.availableQuantity,
+            maxQuantity = event.maxQuantity,
             isActivated = true
         )
         is InventoryItemNameChanged -> copy(name = Optional.of(event.newName))

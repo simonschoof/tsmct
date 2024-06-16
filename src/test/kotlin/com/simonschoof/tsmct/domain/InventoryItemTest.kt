@@ -16,8 +16,8 @@ import java.time.ZoneId
 
 class InventoryItemTest : FunSpec({
     val initialName = "Initial Name"
-    val initialAvailableQuantity = 5
-    val initialMaxQuantity = 10
+    val initialAvailableQuantity = 10
+    val initialMaxQuantity = 50
     val clock = Clock.fixed(
         Instant.now(), ZoneId.of(
             "UTC"
@@ -57,13 +57,12 @@ class InventoryItemTest : FunSpec({
 
         test("remove should decrease the available quantity of the InventoryItem") {
             // Arrange
-            val initialCount = 10
+
             val removeCount = 5
-            val expected = initialCount - removeCount
-            val inventoryWithItems = sut.checkIn(initialCount)
+            val expected = initialAvailableQuantity - removeCount
 
             // Act
-            val updatedInventoryItem = inventoryWithItems.remove(removeCount)
+            val updatedInventoryItem = sut.remove(removeCount)
 
             // Assert
             updatedInventoryItem.changes.shouldNotBeEmpty()
@@ -74,12 +73,11 @@ class InventoryItemTest : FunSpec({
 
         test("remove should not add an event when trying to remove more items than available") {
             // Arrange
-            val initialCount = 10
-            val removeCount = 15 // More than the available quantity
-            sut.checkIn(initialCount)
 
+            val removeCount = 15 // More than the available quantity
+            val expected = initialAvailableQuantity - removeCount
             // Act
-            val updatedInventoryItem = sut.checkIn(initialCount).remove(removeCount)
+            val updatedInventoryItem = sut.remove(removeCount)
 
             // Assert
             updatedInventoryItem.changes.filterIsInstance<InventoryItemsRemoved>().count() shouldBe 0
@@ -90,10 +88,11 @@ class InventoryItemTest : FunSpec({
 
         test("checkIn should increase the available quantity of the InventoryItem") {
             // Arrange
-            val expected = 10
+            val checkInCount = 5
+            val expected = initialAvailableQuantity + checkInCount
 
             // Act
-            val updatedInventoryItem = sut.checkIn(expected)
+            val updatedInventoryItem = sut.checkIn(checkInCount)
 
             // Assert
             updatedInventoryItem.changes.shouldNotBeEmpty()
