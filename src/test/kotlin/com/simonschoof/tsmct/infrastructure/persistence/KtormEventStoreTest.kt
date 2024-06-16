@@ -1,11 +1,7 @@
 package com.simonschoof.tsmct.infrastructure.persistence
 
-import com.simonschoof.tsmct.domain.InventoryItem
-import com.simonschoof.tsmct.domain.InventoryItemCreated
-import com.simonschoof.tsmct.domain.InventoryItemNameChanged
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
 import com.simonschoof.tsmct.domain.buildingblocks.Event
-import com.simonschoof.tsmct.infrastructure.AggregateQualifiedNameProvider
 import com.simonschoof.tsmct.infrastructure.EventQualifiedNameProvider
 import com.simonschoof.tsmct.infrastructure.KediatorEventBus
 import com.trendyol.kediatr.NotificationHandler
@@ -30,7 +26,6 @@ import org.springframework.stereotype.Component
                 KtormEventStore::class,
                 KediatorEventBus::class,
                 EventQualifiedNameProvider::class,
-                AggregateQualifiedNameProvider::class,
                 KtormEventStoreTestEventHandler::class
             ]
         )
@@ -51,11 +46,11 @@ class KtormEventStoreTest(
         test("saveEvents should save events to the database and publish them to the event bus") {
             // Arrange
             val aggregateId = AggregateId.randomUUID()
-            val aggregateType = InventoryItem::class.simpleName!!
-            val baseEventInfo = InventoryItem.invoke("test", 5, 10).baseEventInfo()
-            val inventoryItemCreated = InventoryItemCreated(baseEventInfo, "test", 5, 10)
-            val inventoryItemNameChanged = InventoryItemNameChanged(baseEventInfo, "newName")
-            val events = listOf(inventoryItemCreated, inventoryItemNameChanged)
+            val aggregateType = RepositoryTestAggregate::class.simpleName!!
+            val baseEventInfo = RepositoryTestAggregate.invoke("test").baseEventInfo()
+            val repositoryTestAggregateCreated = RepositoryTestAggregateCreated(baseEventInfo, "test")
+            val repositoryTestAggregateChanged = RepositoryTestAggregateNameChanged(baseEventInfo, "newName")
+            val events = listOf(repositoryTestAggregateCreated, repositoryTestAggregateChanged)
 
             // Act
             runBlocking { eventStore.saveEvents(aggregateId, aggregateType, events) }
@@ -72,11 +67,11 @@ class KtormEventStoreTest(
         test("getEventsForAggregate should return events for the given aggregate ID") {
             // Arrange
             val aggregateId = AggregateId.randomUUID()
-            val aggregateType = InventoryItem::class.simpleName!!
-            val baseEventInfo = InventoryItem.invoke("test", 5, 10).baseEventInfo()
-            val inventoryItemCreated = InventoryItemCreated(baseEventInfo, "test", 5, 10)
-            val inventoryItemNameChanged = InventoryItemNameChanged(baseEventInfo, "newName")
-            val events = listOf(inventoryItemCreated, inventoryItemNameChanged)
+            val aggregateType = RepositoryTestAggregate::class.simpleName!!
+            val baseEventInfo = RepositoryTestAggregate.invoke("test").baseEventInfo()
+            val repositoryTestAggregateCreated = RepositoryTestAggregateCreated(baseEventInfo, "test")
+            val repositoryTestAggregateChanged = RepositoryTestAggregateNameChanged(baseEventInfo, "newName")
+            val events = listOf(repositoryTestAggregateCreated, repositoryTestAggregateChanged)
             runBlocking { eventStore.saveEvents(aggregateId, aggregateType, events) }
 
 
@@ -105,8 +100,8 @@ class KtormEventStoreTest(
 class KtormEventStoreTestEventHandler : NotificationHandler<Event> {
     override suspend fun handle(notification: Event) {
         when (notification) {
-            is InventoryItemCreated -> notification.name shouldBe "test"
-            is InventoryItemNameChanged -> notification.newName shouldBe "newName"
+            is RepositoryTestAggregateCreated -> notification.name shouldBe "test"
+            is RepositoryTestAggregateNameChanged -> notification.newName shouldBe "newName"
         }
     }
 }

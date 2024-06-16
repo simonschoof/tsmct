@@ -15,6 +15,7 @@ val kediatrVersion = "3.0.0"
 val reactiveStreamVersion = "1.0.4"
 val reactorCoreVersion = "3.6.6"
 val kotlinxCoroutinesVersion = "1.8.1"
+val mockkVersion = "1.13.11"
 
 plugins {
 	id("org.springframework.boot") version "3.3.0"
@@ -71,6 +72,7 @@ dependencies {
 	testImplementation("io.kotest.extensions:kotest-extensions-spring:$kotestSpringVersion")
 	testImplementation("io.zonky.test:embedded-database-spring-test:$embeddedDbSpringTesVersion")
 	testImplementation("org.flywaydb.flyway-test-extensions:flyway-spring-test:$flywayTestVersion")
+	testImplementation("io.mockk:mockk:${mockkVersion}")
 }
 
 configurations {
