@@ -4,7 +4,6 @@ import com.simonschoof.tsmct.TsmctApplication
 import com.simonschoof.tsmct.configs.DomainClassNamesConfig
 import com.simonschoof.tsmct.configs.JacksonConfig
 import com.simonschoof.tsmct.configs.KtormConfig
-import com.trendyol.kediatr.spring.KediatRAutoConfiguration
 import io.kotest.core.spec.style.FunSpec
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY
@@ -27,7 +26,6 @@ import java.time.ZoneId
         KtormConfig::class,
         FixedClockConfig::class,
         JacksonConfig::class,
-        KediatRAutoConfiguration::class,
         DomainClassNamesConfig::class
     ]
 )

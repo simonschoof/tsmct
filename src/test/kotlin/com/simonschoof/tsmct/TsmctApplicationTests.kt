@@ -1,6 +1,6 @@
 package com.simonschoof.tsmct
 
-import com.simonschoof.tsmct.application.CreateInventoryItemCommandHandler
+import com.simonschoof.tsmct.application.InventoryItemCommandHandlers
 import com.simonschoof.tsmct.domain.CreateInventoryItem
 import com.simonschoof.tsmct.infrastructure.persistence.EventTable
 import io.ko.com.simonschoof.tsmct.SpringBootSpec
@@ -11,7 +11,7 @@ import org.ktorm.dsl.from
 import org.ktorm.dsl.select
 
 class TsmctApplicationTests(
-	private val createInventoryItemCommandHandler: CreateInventoryItemCommandHandler,
+	private val inventoryItemCommandHandlers: InventoryItemCommandHandlers,
 	private val database: Database): SpringBootSpec({
 
 	beforeTest() {
@@ -26,7 +26,7 @@ class TsmctApplicationTests(
 		val command = CreateInventoryItem("test", 5, 10)
 
 		// act
-		createInventoryItemCommandHandler.handle(command)
+		inventoryItemCommandHandlers.handle(command)
 
 		// assert
 		database.from(EventTable).select().totalRecordsInAllPages shouldBe 1

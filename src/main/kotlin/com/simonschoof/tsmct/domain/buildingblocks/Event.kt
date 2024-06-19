@@ -1,6 +1,5 @@
 package com.simonschoof.tsmct.domain.buildingblocks
 
-import com.trendyol.kediatr.Notification
 import java.time.Instant
 
 
@@ -10,7 +9,7 @@ data class BaseEventInfo(
     val timestamp: Instant
 )
 
-interface Event : Notification {
+interface Event  {
     val baseEventInfo: BaseEventInfo
 
     val aggregateId

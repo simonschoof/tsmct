@@ -3,8 +3,7 @@ package com.simonschoof.tsmct.infrastructure.persistence
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
 import com.simonschoof.tsmct.domain.buildingblocks.Event
 import com.simonschoof.tsmct.infrastructure.EventQualifiedNameProvider
-import com.simonschoof.tsmct.infrastructure.KediatorEventBus
-import com.trendyol.kediatr.NotificationHandler
+import com.simonschoof.tsmct.infrastructure.SpringEventBus
 import io.ko.com.simonschoof.tsmct.DatabaseSpec
 import io.kotest.common.runBlocking
 import io.kotest.matchers.collections.shouldContainAll
@@ -16,6 +15,7 @@ import org.ktorm.dsl.select
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
 @DataJpaTest(
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component
             type = FilterType.ASSIGNABLE_TYPE,
             classes = [
                 KtormEventStore::class,
-                KediatorEventBus::class,
+                SpringEventBus::class,
                 EventQualifiedNameProvider::class,
                 KtormEventStoreTestEventHandler::class
             ]
@@ -97,8 +97,9 @@ class KtormEventStoreTest(
 })
 
 @Component
-class KtormEventStoreTestEventHandler : NotificationHandler<Event> {
-    override suspend fun handle(notification: Event) {
+class KtormEventStoreTestEventHandler {
+    @EventListener
+    fun handle(notification: Event) {
         when (notification) {
             is RepositoryTestAggregateCreated -> notification.name shouldBe "test"
             is RepositoryTestAggregateNameChanged -> notification.newName shouldBe "newName"

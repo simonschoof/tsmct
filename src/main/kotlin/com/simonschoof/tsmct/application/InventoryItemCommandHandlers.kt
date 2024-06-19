@@ -8,15 +8,16 @@ import com.simonschoof.tsmct.domain.DeactivateInventoryItem
 import com.simonschoof.tsmct.domain.InventoryItem
 import com.simonschoof.tsmct.domain.RemoveInventoryItems
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateRepository
-import com.trendyol.kediatr.CommandHandler
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
 @Transactional
-class CreateInventoryItemCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>) :
-    CommandHandler<CreateInventoryItem> {
-    override suspend fun handle(command: CreateInventoryItem) {
+class InventoryItemCommandHandlers(private val aggregateRepository: AggregateRepository<InventoryItem>) {
+
+    @EventListener
+    fun handle(command: CreateInventoryItem) {
         val inventoryItem = InventoryItem.invoke(
             inventoryItemName = command.name,
             availableQuantity = command.availableQuantity,
@@ -24,13 +25,9 @@ class CreateInventoryItemCommandHandler(private val aggregateRepository: Aggrega
         )
         aggregateRepository.save(inventoryItem)
     }
-}
 
-@Component
-@Transactional
-class ChangeInventoryItemNameCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>) :
-    CommandHandler<ChangeInventoryItemName> {
-    override suspend fun handle(command: ChangeInventoryItemName) {
+    @EventListener
+    fun handle(command: ChangeInventoryItemName) {
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().changeName(command.newName)
@@ -39,13 +36,9 @@ class ChangeInventoryItemNameCommandHandler(private val aggregateRepository: Agg
             }
         }
     }
-}
 
-@Component
-@Transactional
-class RemoveInventoryItemsCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>) :
-    CommandHandler<RemoveInventoryItems> {
-    override suspend fun handle(command: RemoveInventoryItems) {
+    @EventListener
+    fun handle(command: RemoveInventoryItems) {
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().remove(command.count)
@@ -54,13 +47,9 @@ class RemoveInventoryItemsCommandHandler(private val aggregateRepository: Aggreg
             }
         }
     }
-}
 
-@Component
-@Transactional
-class CheckInInventoryItemsCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>) :
-    CommandHandler<CheckInInventoryItems> {
-    override suspend fun handle(command: CheckInInventoryItems) {
+    @EventListener
+    fun handle(command: CheckInInventoryItems) {
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().checkIn(command.count)
@@ -69,13 +58,9 @@ class CheckInInventoryItemsCommandHandler(private val aggregateRepository: Aggre
             }
         }
     }
-}
 
-@Component
-@Transactional
-class ChangeMaxQuantityCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>) :
-    CommandHandler<ChangeMaxQuantity> {
-    override suspend fun handle(command: ChangeMaxQuantity) {
+    @EventListener
+    fun handle(command: ChangeMaxQuantity) {
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().changeMaxQuantity(command.newMaxQuantity)
@@ -84,13 +69,9 @@ class ChangeMaxQuantityCommandHandler(private val aggregateRepository: Aggregate
             }
         }
     }
-}
 
-@Component
-@Transactional
-class DeactivateInventoryItemCommandHandler(private val aggregateRepository: AggregateRepository<InventoryItem>) :
-    CommandHandler<DeactivateInventoryItem> {
-    override suspend fun handle(command: DeactivateInventoryItem) {
+    @EventListener
+    fun handle(command: DeactivateInventoryItem) {
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().deactivate()
@@ -100,7 +81,3 @@ class DeactivateInventoryItemCommandHandler(private val aggregateRepository: Agg
         }
     }
 }
-
-
-
-

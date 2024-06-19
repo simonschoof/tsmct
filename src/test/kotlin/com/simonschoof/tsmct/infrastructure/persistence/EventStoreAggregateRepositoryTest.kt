@@ -3,7 +3,7 @@ package com.simonschoof.tsmct.infrastructure.persistence
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
 import com.simonschoof.tsmct.infrastructure.AggregateQualifiedNameProvider
 import com.simonschoof.tsmct.infrastructure.EventQualifiedNameProvider
-import com.simonschoof.tsmct.infrastructure.KediatorEventBus
+import com.simonschoof.tsmct.infrastructure.SpringEventBus
 import io.ko.com.simonschoof.tsmct.DatabaseSpec
 import io.kotest.common.runBlocking
 import io.kotest.matchers.shouldBe
@@ -25,7 +25,7 @@ import java.util.Optional
             classes = [
                 EventStoreAggregateRepository::class,
                 KtormEventStore::class,
-                KediatorEventBus::class,
+                SpringEventBus::class,
                 EventQualifiedNameProvider::class,
                 AggregateQualifiedNameProvider::class,
             ]

@@ -62,9 +62,6 @@ dependencies {
 
 	implementation("io.github.oshai:kotlin-logging:$kotlinLoggingVersion")
 
-	implementation("com.trendyol:kediatr-core:$kediatrVersion")
-	implementation("com.trendyol:kediatr-spring-starter:$kediatrVersion")
-
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
 	testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")

@@ -1,7 +1,7 @@
 package io.ko.com.simonschoof.tsmct.infrastructure.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.simonschoof.tsmct.infrastructure.KediatorEventBus
+import com.simonschoof.tsmct.infrastructure.SpringEventBus
 import com.simonschoof.tsmct.infrastructure.web.InventoryItemController
 import io.ko.com.simonschoof.tsmct.WebSpec
 import org.springframework.http.MediaType
@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 @ContextConfiguration(
     classes = [
         InventoryItemController::class,
-        KediatorEventBus::class,
+        SpringEventBus::class,
     ]
 )
 class InventoryItemControllerTest(

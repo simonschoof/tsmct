@@ -15,7 +15,7 @@ class EventStoreAggregateRepository<T : AggregateRoot<T>>(
     private val aggregateQualifiedNameProvider: AggregateQualifiedNameProvider
 ) : AggregateRepository<T> {
 
-    override suspend fun save(aggregate: T) {
+    override fun save(aggregate: T) {
         if (aggregate.id.isPresent) {
             eventStore.saveEvents(
                 aggregateId = aggregate.id.get(),

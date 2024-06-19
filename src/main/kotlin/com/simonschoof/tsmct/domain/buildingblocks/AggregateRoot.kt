@@ -28,7 +28,7 @@ interface AggregateRoot<T> {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun loadFromHistory(history: Iterable<Event>): T {
+    fun loadFromHistory(history: List<Event>): T {
         return history.fold(
             initial = this,
             operation = ({ acc: AggregateRoot<T>, event: Event -> acc.applyChange(event, false) as AggregateRoot<T> })

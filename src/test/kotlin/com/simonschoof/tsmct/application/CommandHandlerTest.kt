@@ -1,10 +1,6 @@
 package io.ko.com.simonschoof.tsmct.application
 
-import com.simonschoof.tsmct.application.ChangeInventoryItemNameCommandHandler
-import com.simonschoof.tsmct.application.ChangeMaxQuantityCommandHandler
-import com.simonschoof.tsmct.application.CheckInInventoryItemsCommandHandler
-import com.simonschoof.tsmct.application.CreateInventoryItemCommandHandler
-import com.simonschoof.tsmct.application.RemoveInventoryItemsCommandHandler
+import com.simonschoof.tsmct.application.InventoryItemCommandHandlers
 import com.simonschoof.tsmct.domain.ChangeInventoryItemName
 import com.simonschoof.tsmct.domain.ChangeMaxQuantity
 import com.simonschoof.tsmct.domain.CheckInInventoryItems
@@ -17,7 +13,7 @@ import com.simonschoof.tsmct.domain.RemoveInventoryItems
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
 import com.simonschoof.tsmct.infrastructure.AggregateQualifiedNameProvider
 import com.simonschoof.tsmct.infrastructure.EventQualifiedNameProvider
-import com.simonschoof.tsmct.infrastructure.KediatorEventBus
+import com.simonschoof.tsmct.infrastructure.SpringEventBus
 import com.simonschoof.tsmct.infrastructure.persistence.EventStoreAggregateRepository
 import com.simonschoof.tsmct.infrastructure.persistence.EventTable
 import com.simonschoof.tsmct.infrastructure.persistence.KtormEventStore
@@ -37,14 +33,10 @@ import org.springframework.context.annotation.FilterType
         ComponentScan.Filter(
             type = FilterType.ASSIGNABLE_TYPE,
             classes = [
-                CreateInventoryItemCommandHandler::class,
-                ChangeInventoryItemNameCommandHandler::class,
-                CheckInInventoryItemsCommandHandler::class,
-                RemoveInventoryItemsCommandHandler::class,
-                ChangeMaxQuantityCommandHandler::class,
+                InventoryItemCommandHandlers::class,
                 EventStoreAggregateRepository::class,
                 KtormEventStore::class,
-                KediatorEventBus::class,
+                SpringEventBus::class,
                 EventQualifiedNameProvider::class,
                 AggregateQualifiedNameProvider::class
             ]
@@ -52,11 +44,7 @@ import org.springframework.context.annotation.FilterType
     ]
 )
 class CommandHandlerTest(
-    private val createInventoryItemCommandHandler: CreateInventoryItemCommandHandler,
-    private val changeInventoryItemNameCommandHandler: ChangeInventoryItemNameCommandHandler,
-    private val checkInInventoryItemsCommandHandler: CheckInInventoryItemsCommandHandler,
-    private val removeInventoryItemsCommandHandler: RemoveInventoryItemsCommandHandler,
-    private val changeMaxQuantityCommandHandler: ChangeMaxQuantityCommandHandler,
+    private val inventoryItemCommandHandlers: InventoryItemCommandHandlers,
     private val database: Database
 ) : DatabaseSpec({
 
@@ -65,7 +53,7 @@ class CommandHandlerTest(
     beforeTest {
         database.deleteAll(EventTable)
         val command = CreateInventoryItem("test", 10, 15)
-        createInventoryItemCommandHandler.handle(command)
+        inventoryItemCommandHandlers.handle(command)
         aggregateId = database.from(EventTable).select().map { it[EventTable.aggregateId]!! }.first()
     }
 
@@ -82,7 +70,7 @@ class CommandHandlerTest(
             val command = ChangeInventoryItemName(aggregateId, "newName")
 
             // act
-            changeInventoryItemNameCommandHandler.handle(command)
+            inventoryItemCommandHandlers.handle(command)
 
             // assert
             database.from(EventTable).select().totalRecordsInAllPages shouldBe 2
@@ -96,7 +84,7 @@ class CommandHandlerTest(
             val command = CheckInInventoryItems(aggregateId, 5)
 
             // act
-            checkInInventoryItemsCommandHandler.handle(command)
+            inventoryItemCommandHandlers.handle(command)
 
             // assert
             database.from(EventTable).select().totalRecordsInAllPages shouldBe 2
@@ -110,7 +98,7 @@ class CommandHandlerTest(
             val command = RemoveInventoryItems(aggregateId, 5)
 
             // act
-            removeInventoryItemsCommandHandler.handle(command)
+            inventoryItemCommandHandlers.handle(command)
 
             // assert
             database.from(EventTable).select().totalRecordsInAllPages shouldBe 2
@@ -124,7 +112,7 @@ class CommandHandlerTest(
             val command = ChangeMaxQuantity(aggregateId, 15)
 
             // act
-            changeMaxQuantityCommandHandler.handle(command)
+            inventoryItemCommandHandlers.handle(command)
 
             // assert
             database.from(EventTable).select().totalRecordsInAllPages shouldBe 2

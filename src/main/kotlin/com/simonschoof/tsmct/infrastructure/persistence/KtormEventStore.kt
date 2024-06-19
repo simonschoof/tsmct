@@ -29,7 +29,7 @@ class KtormEventStore(
     private val eventQualifiedNameProvider: EventQualifiedNameProvider
 ) : EventStore {
 
-    override suspend fun saveEvents(aggregateId: AggregateId, aggregateType: String, events: List<Event>) {
+    override fun saveEvents(aggregateId: AggregateId, aggregateType: String, events: List<Event>) {
         events.forEach { event: Event ->
             saveEvent(aggregateId, aggregateType, event)
             eventBus.publish(event)
