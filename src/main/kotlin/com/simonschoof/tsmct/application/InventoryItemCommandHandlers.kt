@@ -31,7 +31,7 @@ class InventoryItemCommandHandlers(private val aggregateRepository: AggregateRep
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().changeName(command.newName)
-            if (updatedInventoryItem.changes.isNotEmpty()) {
+            if (updatedInventoryItem.hasChanges()) {
                 aggregateRepository.save(updatedInventoryItem)
             }
         }
@@ -42,7 +42,7 @@ class InventoryItemCommandHandlers(private val aggregateRepository: AggregateRep
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().remove(command.count)
-            if (updatedInventoryItem.changes.isNotEmpty()) {
+            if (updatedInventoryItem.hasChanges()) {
                 aggregateRepository.save(updatedInventoryItem)
             }
         }
@@ -53,7 +53,7 @@ class InventoryItemCommandHandlers(private val aggregateRepository: AggregateRep
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().checkIn(command.count)
-            if (updatedInventoryItem.changes.isNotEmpty()) {
+            if (updatedInventoryItem.hasChanges()) {
                 aggregateRepository.save(updatedInventoryItem)
             }
         }
@@ -64,7 +64,7 @@ class InventoryItemCommandHandlers(private val aggregateRepository: AggregateRep
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().changeMaxQuantity(command.newMaxQuantity)
-            if (updatedInventoryItem.changes.isNotEmpty()) {
+            if (updatedInventoryItem.hasChanges()) {
                 aggregateRepository.save(updatedInventoryItem)
             }
         }
@@ -75,7 +75,7 @@ class InventoryItemCommandHandlers(private val aggregateRepository: AggregateRep
         val inventoryItem = aggregateRepository.getById(command.aggregateId)
         if (inventoryItem.isPresent) {
             val updatedInventoryItem = inventoryItem.get().deactivate()
-            if (updatedInventoryItem.changes.isNotEmpty()) {
+            if (updatedInventoryItem.hasChanges()) {
                 aggregateRepository.save(updatedInventoryItem)
             }
         }
