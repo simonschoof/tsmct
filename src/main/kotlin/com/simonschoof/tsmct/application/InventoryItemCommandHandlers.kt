@@ -28,56 +28,36 @@ class InventoryItemCommandHandlers(private val aggregateRepository: AggregateRep
 
     @EventListener
     fun handle(command: ChangeInventoryItemName) {
-        val inventoryItem = aggregateRepository.getById(command.aggregateId)
-        if (inventoryItem.isPresent) {
-            val updatedInventoryItem = inventoryItem.get().changeName(command.newName)
-            if (updatedInventoryItem.hasChanges()) {
-                aggregateRepository.save(updatedInventoryItem)
-            }
+        aggregateRepository.getById(command.aggregateId).ifPresent {
+            it.changeName(command.newName).hasChanges().apply { aggregateRepository.save(it) }
         }
     }
 
     @EventListener
     fun handle(command: RemoveInventoryItems) {
-        val inventoryItem = aggregateRepository.getById(command.aggregateId)
-        if (inventoryItem.isPresent) {
-            val updatedInventoryItem = inventoryItem.get().remove(command.count)
-            if (updatedInventoryItem.hasChanges()) {
-                aggregateRepository.save(updatedInventoryItem)
-            }
+        aggregateRepository.getById(command.aggregateId).ifPresent {
+            it.remove(command.count).hasChanges().apply { aggregateRepository.save(it) }
         }
     }
 
     @EventListener
     fun handle(command: CheckInInventoryItems) {
-        val inventoryItem = aggregateRepository.getById(command.aggregateId)
-        if (inventoryItem.isPresent) {
-            val updatedInventoryItem = inventoryItem.get().checkIn(command.count)
-            if (updatedInventoryItem.hasChanges()) {
-                aggregateRepository.save(updatedInventoryItem)
-            }
+        aggregateRepository.getById(command.aggregateId).ifPresent {
+            it.checkIn(command.count).hasChanges().apply { aggregateRepository.save(it) }
         }
     }
 
     @EventListener
     fun handle(command: ChangeMaxQuantity) {
-        val inventoryItem = aggregateRepository.getById(command.aggregateId)
-        if (inventoryItem.isPresent) {
-            val updatedInventoryItem = inventoryItem.get().changeMaxQuantity(command.newMaxQuantity)
-            if (updatedInventoryItem.hasChanges()) {
-                aggregateRepository.save(updatedInventoryItem)
-            }
+        aggregateRepository.getById(command.aggregateId).ifPresent {
+            it.changeMaxQuantity(command.newMaxQuantity).hasChanges().apply { aggregateRepository.save(it) }
         }
     }
 
     @EventListener
     fun handle(command: DeactivateInventoryItem) {
-        val inventoryItem = aggregateRepository.getById(command.aggregateId)
-        if (inventoryItem.isPresent) {
-            val updatedInventoryItem = inventoryItem.get().deactivate()
-            if (updatedInventoryItem.hasChanges()) {
-                aggregateRepository.save(updatedInventoryItem)
-            }
+        aggregateRepository.getById(command.aggregateId).ifPresent {
+            it.deactivate().hasChanges().apply { aggregateRepository.save(it) }
         }
     }
 }
