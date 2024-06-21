@@ -12,19 +12,23 @@ import org.ktorm.entity.add
 import org.ktorm.entity.find
 import org.ktorm.entity.removeIf
 import org.ktorm.entity.sequenceOf
-import org.ktorm.entity.update
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
 @Transactional
-class InventoryItemListView(private val database: Database) {
+class InventoryItemListView(
+    private val database: Database,
+    private val rmiit: ReadModelInventoryItemTable = ReadModelInventoryItemTable.aliased("rmiit")
+) {
+
+    val Database.inventoryItems get() = this.sequenceOf(rmiit)
 
     @EventListener
     fun handle(event: InventoryItemCreated) {
         println("created a new inventory item with name ${event.name}")
-        database.sequenceOf(ReadModelInventoryItemTable).add(ReadModelInventoryItemEntity {
+        database.inventoryItems.add(ReadModelInventoryItemEntity {
             aggregateId = event.aggregateId
             name = event.name
         })
@@ -37,25 +41,33 @@ class InventoryItemListView(private val database: Database) {
             aggregateId = event.aggregateId
             name = event.newName
         }
-        database.sequenceOf(ReadModelInventoryItemTable).update(readModelInventoryItemEntity)
+        database.inventoryItems.find { it.aggregateId eq event.aggregateId }?.let {
+            it.name = event.newName
+            it.flushChanges()
+        } ?: throw IllegalStateException("Inventory item with id ${event.aggregateId} not found")
     }
 
     @EventListener
     fun handle(event: InventoryItemDeactivated) {
         println("deactivated inventory item with ${event.aggregateId}")
-        database.sequenceOf(ReadModelInventoryItemTable).removeIf { it.aggregateId eq event.aggregateId }
+        database.inventoryItems.removeIf { it.aggregateId eq event.aggregateId }
     }
 
 }
 
 @Component
 @Transactional
-class InventoryItemDetailView(private val database: Database) {
+class InventoryItemDetailView(
+    private val database: Database,
+    private val rmiidt: ReadModelInventoryItemDetailsTable = ReadModelInventoryItemDetailsTable.aliased("rmiidt")
+) {
+
+    val Database.inventoryItemDetails get() = this.sequenceOf(rmiidt)
 
     @EventListener
     fun handle(event: InventoryItemCreated) {
         println("created a new inventory item with name ${event.name}")
-        database.sequenceOf(ReadModelInventoryItemDetailsTable).add(ReadModelInventoryItemDetailsEntity {
+        database.inventoryItemDetails.add(ReadModelInventoryItemDetailsEntity {
             aggregateId = event.aggregateId
             name = event.name
             availableQuantity = event.availableQuantity
@@ -66,43 +78,43 @@ class InventoryItemDetailView(private val database: Database) {
     @EventListener
     fun handle(event: InventoryItemNameChanged) {
         println("changed name of inventory item to name ${event.newName}")
-        database.sequenceOf(ReadModelInventoryItemDetailsTable).find { it.aggregateId eq event.aggregateId }?.let {
+        database.inventoryItemDetails.find { it.aggregateId eq event.aggregateId }?.let {
             it.name = event.newName
-            database.sequenceOf(ReadModelInventoryItemDetailsTable).update(it)
-        }
+            it.flushChanges()
+        } ?: throw IllegalStateException("Inventory item with id ${event.aggregateId} not found")
     }
 
     @EventListener
     fun handle(event: InventoryItemsCheckedIn) {
         println("checked in items for inventory item with ${event.aggregateId}")
-        database.sequenceOf(ReadModelInventoryItemDetailsTable).find { it.aggregateId eq event.aggregateId }?.let {
+        database.inventoryItemDetails.find { it.aggregateId eq event.aggregateId }?.let {
             it.availableQuantity = event.newAvailableQuantity
-            database.sequenceOf(ReadModelInventoryItemDetailsTable).update(it)
-        }
+            it.flushChanges()
+        } ?: throw IllegalStateException("Inventory item with id ${event.aggregateId} not found")
     }
 
     @EventListener
     fun handle(event: InventoryItemsRemoved) {
         println("removed items for inventory item with ${event.aggregateId}")
-        database.sequenceOf(ReadModelInventoryItemDetailsTable).find { it.aggregateId eq event.aggregateId }?.let {
+        database.inventoryItemDetails.find { it.aggregateId eq event.aggregateId }?.let {
             it.availableQuantity = event.newAvailableQuantity
-            database.sequenceOf(ReadModelInventoryItemDetailsTable).update(it)
-        }
+            it.flushChanges()
+        } ?: throw IllegalStateException("Inventory item with id ${event.aggregateId} not found")
     }
 
     @EventListener
     fun handle(event: InventoryItemMaxQuantityChanged) {
         println("changed max quantity of inventory item with ${event.aggregateId} to ${event.newMaxQuantity}")
-        database.sequenceOf(ReadModelInventoryItemDetailsTable).find { it.aggregateId eq event.aggregateId }?.let {
+        database.inventoryItemDetails.find { it.aggregateId eq event.aggregateId }?.let {
             it.maxQuantity = event.newMaxQuantity
-            database.sequenceOf(ReadModelInventoryItemDetailsTable).update(it)
-        }
+            it.flushChanges()
+        } ?: throw IllegalStateException("Inventory item with id ${event.aggregateId} not found")
     }
 
     @EventListener
     fun handle(event: InventoryItemDeactivated) {
         println("deactivated inventory item with ${event.aggregateId}")
-        database.sequenceOf(ReadModelInventoryItemDetailsTable).removeIf { it.aggregateId eq event.aggregateId }
+        database.inventoryItemDetails.removeIf { it.aggregateId eq event.aggregateId }
     }
 }
 

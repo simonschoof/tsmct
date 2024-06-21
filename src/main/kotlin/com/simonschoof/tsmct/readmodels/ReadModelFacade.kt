@@ -16,28 +16,33 @@ interface ReadModelFacade {
 }
 
 @Component
-class KtormReadModelFacade(private val database: Database): ReadModelFacade {
+class KtormReadModelFacade(
+    private val database: Database,
+    private val rmiit: ReadModelInventoryItemTable = ReadModelInventoryItemTable.aliased("rmiit"),
+    private val rmiidt: ReadModelInventoryItemDetailsTable = ReadModelInventoryItemDetailsTable.aliased("rmiidt")
+) : ReadModelFacade {
+
     override fun getInventoryItems(): List<InventoryItemDto> {
-        return database.from(ReadModelInventoryItemTable)
+        return database.from(rmiit)
             .select()
             .map {
                 InventoryItemDto(
-                    aggregateId = it[ReadModelInventoryItemTable.aggregateId]!!,
-                    name = it[ReadModelInventoryItemTable.name]!!
+                    aggregateId = it[rmiit.aggregateId]!!,
+                    name = it[rmiit.name]!!
                 )
             }
     }
 
     override fun getInventoryItemDetails(aggregateId: AggregateId): Optional<InventoryItemDetailsDto> {
-        return database.from(ReadModelInventoryItemDetailsTable)
+        return database.from(rmiidt)
             .select()
-            .where { ReadModelInventoryItemDetailsTable.aggregateId eq aggregateId }
+            .where { rmiidt.aggregateId eq aggregateId }
             .map {
                 InventoryItemDetailsDto(
-                    aggregateId = it[ReadModelInventoryItemDetailsTable.aggregateId]!!,
-                    name = it[ReadModelInventoryItemDetailsTable.name]!!,
-                    availableQuantity = it[ReadModelInventoryItemDetailsTable.availableQuantity]!!,
-                    maxQuantity = it[ReadModelInventoryItemDetailsTable.maxQuantity]!!
+                    aggregateId = it[rmiidt.aggregateId]!!,
+                    name = it[rmiidt.name]!!,
+                    availableQuantity = it[rmiidt.availableQuantity]!!,
+                    maxQuantity = it[rmiidt.maxQuantity]!!
                 )
             }
             .firstOrNull()
