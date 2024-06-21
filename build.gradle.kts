@@ -7,6 +7,7 @@ val ktormVersion = "4.0.0"
 val embeddedDbSpringTesVersion = "2.5.1"
 val embeddedPostgresVersion = "2.0.7"
 val jacksonKotlinModuleVersion = "2.17.1"
+val jacksonDataTypeModuleVersion = "2.17.1"
 val postgresqlVersion = "42.7.3"
 val kotlinLoggingVersion = "6.0.9"
 val flywayVersion = "10.15.0"
@@ -45,6 +46,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinModuleVersion")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonDataTypeModuleVersion")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.reactivestreams:reactive-streams:$reactiveStreamVersion")
 	implementation("io.projectreactor:reactor-core:$reactorCoreVersion")

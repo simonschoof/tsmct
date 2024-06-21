@@ -7,17 +7,25 @@ import com.simonschoof.tsmct.domain.CreateInventoryItem
 import com.simonschoof.tsmct.domain.DeactivateInventoryItem
 import com.simonschoof.tsmct.domain.RemoveInventoryItems
 import com.simonschoof.tsmct.domain.buildingblocks.EventBus
+import com.simonschoof.tsmct.readmodels.InventoryItemDetailsDto
+import com.simonschoof.tsmct.readmodels.InventoryItemDto
+import com.simonschoof.tsmct.readmodels.ReadModelFacade
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import java.util.Optional
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
 @RestController
-class InventoryItemController(private val eventBus: EventBus) {
+class InventoryItemController(
+    private val eventBus: EventBus, 
+    private val readModelFacade: ReadModelFacade
+) {
 
     data class InventoryItemRequest(val inventoryItemName: String, val availableQuantity: Int, val maxQuantity: Int)
 
@@ -26,7 +34,7 @@ class InventoryItemController(private val eventBus: EventBus) {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    suspend fun addInventoryItem(@RequestBody inventoryItemRequest: InventoryItemRequest) {
+    fun addInventoryItem(@RequestBody inventoryItemRequest: InventoryItemRequest) {
         val createInventoryItem = CreateInventoryItem(
             inventoryItemRequest.inventoryItemName,
             inventoryItemRequest.availableQuantity,
@@ -45,7 +53,7 @@ class InventoryItemController(private val eventBus: EventBus) {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    suspend fun changeInventoryItemName(@RequestBody changeInventoryItemNameRequest: ChangeInventoryItemNameRequest) {
+    fun changeInventoryItemName(@RequestBody changeInventoryItemNameRequest: ChangeInventoryItemNameRequest) {
         val changeInventoryItemName = ChangeInventoryItemName(
             UUID.fromString(changeInventoryItemNameRequest.aggregateId),
             changeInventoryItemNameRequest.newInventoryItemName
@@ -60,7 +68,7 @@ class InventoryItemController(private val eventBus: EventBus) {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    suspend fun removeInventoryItems(@RequestBody removeInventoryItemsRequest: RemoveInventoryItemsRequest) {
+    fun removeInventoryItems(@RequestBody removeInventoryItemsRequest: RemoveInventoryItemsRequest) {
         val removeInventoryItems = RemoveInventoryItems(
             UUID.fromString(removeInventoryItemsRequest.aggregateId),
             removeInventoryItemsRequest.count
@@ -75,7 +83,7 @@ class InventoryItemController(private val eventBus: EventBus) {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    suspend fun checkInInventoryItems(@RequestBody checkInInventoryItemsRequest: CheckInInventoryItemsRequest) {
+    fun checkInInventoryItems(@RequestBody checkInInventoryItemsRequest: CheckInInventoryItemsRequest) {
         val checkInInventoryItems = CheckInInventoryItems(
             UUID.fromString(checkInInventoryItemsRequest.aggregateId),
             checkInInventoryItemsRequest.count
@@ -90,7 +98,7 @@ class InventoryItemController(private val eventBus: EventBus) {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    suspend fun changeMaxQuantity(@RequestBody changeMaxQuantityRequest: ChangeMaxQuantityRequest) {
+    fun changeMaxQuantity(@RequestBody changeMaxQuantityRequest: ChangeMaxQuantityRequest) {
         val changeMaxQuantity = ChangeMaxQuantity(
             UUID.fromString(changeMaxQuantityRequest.aggregateId),
             changeMaxQuantityRequest.newMaxQuantity
@@ -105,8 +113,25 @@ class InventoryItemController(private val eventBus: EventBus) {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    suspend fun deactivateInventoryItem(@RequestBody deactivateInventoryItemRequest: DeactivateInventoryItemRequest) {
-        val deactivateInventoryItem = DeactivateInventoryItem(UUID.fromString(deactivateInventoryItemRequest.aggregateId))
+    fun deactivateInventoryItem(@RequestBody deactivateInventoryItemRequest: DeactivateInventoryItemRequest) {
+        val deactivateInventoryItem =
+            DeactivateInventoryItem(UUID.fromString(deactivateInventoryItemRequest.aggregateId))
         eventBus.send(deactivateInventoryItem)
+    }
+
+    @GetMapping(
+        value = ["/api/inventoryItems"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun getInventoryItems() : List<InventoryItemDto> {
+        return readModelFacade.getInventoryItems()
+    }
+
+    @GetMapping(
+        value = ["/api/inventoryItemDetails"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun getInventoryItemDetails(aggregateId: String): Optional<InventoryItemDetailsDto> {
+        return readModelFacade.getInventoryItemDetails(UUID.fromString(aggregateId))
     }
 }
