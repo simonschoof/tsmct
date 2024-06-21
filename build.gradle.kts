@@ -12,14 +12,14 @@ val postgresqlVersion = "42.7.3"
 val kotlinLoggingVersion = "6.0.9"
 val flywayVersion = "10.15.0"
 val flywayTestVersion = "10.0.0"
-val kediatrVersion = "3.0.0"
 val reactiveStreamVersion = "1.0.4"
 val reactorCoreVersion = "3.6.6"
 val kotlinxCoroutinesVersion = "1.8.1"
 val mockkVersion = "1.13.11"
+val springMockkVersion = "4.0.2"
 
 plugins {
-	id("org.springframework.boot") version "3.3.0"
+	id("org.springframework.boot") version "3.3.1"
 	id("io.spring.dependency-management") version "1.1.5"
 	id("com.adarshr.test-logger") version "4.0.0"
 	id("org.flywaydb.flyway") version "10.15.0"
@@ -72,6 +72,7 @@ dependencies {
 	testImplementation("io.zonky.test:embedded-database-spring-test:$embeddedDbSpringTesVersion")
 	testImplementation("org.flywaydb.flyway-test-extensions:flyway-spring-test:$flywayTestVersion")
 	testImplementation("io.mockk:mockk:${mockkVersion}")
+	testImplementation("com.ninja-squad:springmockk:${springMockkVersion}")
 }
 
 configurations {
