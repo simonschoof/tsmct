@@ -16,9 +16,9 @@ class EventStoreAggregateRepository<T : AggregateRoot<T>>(
 ) : AggregateRepository<T> {
 
     override fun save(aggregate: T) {
-        if (aggregate.id.isPresent) {
+        aggregate.id.ifPresent {
             eventStore.saveEvents(
-                aggregateId = aggregate.id.get(),
+                aggregateId = it,
                 aggregateType = aggregate.aggregateType(),
                 events = aggregate.changes
             )
@@ -30,9 +30,7 @@ class EventStoreAggregateRepository<T : AggregateRoot<T>>(
 
         val events = eventStore.getEventsForAggregate(id)
 
-        if (events.isEmpty()) {
-            return Optional.empty()
-        }
+        events.ifEmpty { return Optional.empty()}
 
         val emptyAggregate =
             Class.forName(aggregateQualifiedNameProvider.getQualifiedNameBySimpleName(events.first().aggregateType))
