@@ -6,10 +6,6 @@ import com.simonschoof.tsmct.domain.InventoryItemMaxQuantityChanged
 import com.simonschoof.tsmct.domain.InventoryItemNameChanged
 import com.simonschoof.tsmct.domain.InventoryItemsCheckedIn
 import com.simonschoof.tsmct.domain.InventoryItemsRemoved
-import com.simonschoof.tsmct.infrastructure.persistence.ReadModelInventoryItemDetailsEntity
-import com.simonschoof.tsmct.infrastructure.persistence.ReadModelInventoryItemDetailsTable
-import com.simonschoof.tsmct.infrastructure.persistence.ReadModelInventoryItemEntity
-import com.simonschoof.tsmct.infrastructure.persistence.ReadModelInventoryItemTable
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.entity.add

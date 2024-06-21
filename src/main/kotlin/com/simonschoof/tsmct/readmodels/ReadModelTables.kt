@@ -1,4 +1,4 @@
-package com.simonschoof.tsmct.infrastructure.persistence
+package com.simonschoof.tsmct.readmodels
 
 import org.ktorm.entity.Entity
 import org.ktorm.schema.Table

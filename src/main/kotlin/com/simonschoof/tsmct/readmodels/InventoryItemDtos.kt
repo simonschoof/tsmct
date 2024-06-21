@@ -1,4 +1,6 @@
-package com.simonschoof.tsmct.domain.buildingblocks
+package com.simonschoof.tsmct.readmodels
+
+import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
 
 data class InventoryItemDto(
     val aggregateId: AggregateId,
@@ -10,5 +12,4 @@ data class InventoryItemDetailsDto(
     val name: String,
     val availableQuantity: Int,
     val maxQuantity: Int,
-    val isActive: Boolean
 )
