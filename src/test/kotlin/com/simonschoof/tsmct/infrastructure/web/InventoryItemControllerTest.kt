@@ -2,6 +2,12 @@ package io.ko.com.simonschoof.tsmct.infrastructure.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
+import com.simonschoof.tsmct.domain.ChangeInventoryItemName
+import com.simonschoof.tsmct.domain.ChangeMaxQuantity
+import com.simonschoof.tsmct.domain.CheckInInventoryItems
+import com.simonschoof.tsmct.domain.CreateInventoryItem
+import com.simonschoof.tsmct.domain.DeactivateInventoryItem
+import com.simonschoof.tsmct.domain.RemoveInventoryItems
 import com.simonschoof.tsmct.domain.buildingblocks.AggregateId
 import com.simonschoof.tsmct.domain.buildingblocks.EventBus
 import com.simonschoof.tsmct.infrastructure.web.InventoryItemController
@@ -10,6 +16,7 @@ import com.simonschoof.tsmct.readmodels.InventoryItemDto
 import com.simonschoof.tsmct.readmodels.ReadModelFacade
 import io.ko.com.simonschoof.tsmct.WebSpec
 import io.mockk.every
+import io.mockk.verify
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -38,20 +45,9 @@ class InventoryItemControllerTest(
 
     private val mockMvc: MockMvc = MockMvcBuilders.standaloneSetup(inventoryItemController).build()
 
-    init {
+    private val aggregateIdStr = AggregateId.randomUUID().toString()
 
-        test("initial controller test") {
-            // arrange
-            val inventoryItemRequest = InventoryItemController.InventoryItemRequest("test", 5, 10)
-            every { eventBus.send(any()) } returns Unit
-            // act & assert
-            mockMvc.perform(
-                post("/api/addInventoryItem")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(inventoryItemRequest))
-            )
-                .andExpect(status().isOk)
-        }
+    init {
 
         test("GET /api/inventoryItems") {
             // Arrange
@@ -64,6 +60,8 @@ class InventoryItemControllerTest(
             mockMvc.perform(get("/api/inventoryItems"))
                 .andExpect(status().isOk)
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedInventoryItems)))
+
+            verify { readModelFacade.getInventoryItems() }
         }
 
         test("GET /api/inventoryItemDetails/{id}") {
@@ -76,20 +74,100 @@ class InventoryItemControllerTest(
             mockMvc.perform(get("/api/inventoryItemDetails?aggregateId=$id"))
                 .andExpect(status().isOk)
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedInventoryItem)))
+
+            verify { readModelFacade.getInventoryItemDetails(id) }
         }
 
         test("POST /api/addInventoryItem") {
             // arrange
             val inventoryItemRequest = InventoryItemController.InventoryItemRequest("test", 5, 10)
-            every { eventBus.send(any()) } returns Unit
+            every { eventBus.send(any(CreateInventoryItem::class)) } returns Unit
 
             // act & assert
             mockMvc.perform(
                 post("/api/addInventoryItem")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(inventoryItemRequest))
-            )
+            ).andExpect(status().isOk)
 
+            verify(exactly = 1) { eventBus.send(any(CreateInventoryItem::class)) }
+
+        }
+
+        test("POST /api/checkInInventoryItems") {
+            // arrange
+            val checkInInventoryItemsRequest = InventoryItemController.CheckInInventoryItemsRequest(aggregateIdStr, 5)
+            every { eventBus.send(any(CheckInInventoryItems::class)) } returns Unit
+
+            // act & assert
+            mockMvc.perform(
+                post("/api/checkInInventoryItems")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(checkInInventoryItemsRequest))
+            ).andExpect(status().isOk)
+
+            verify(exactly = 1) { eventBus.send(any(CheckInInventoryItems::class))}
+        }
+
+        test("POST /api/changeInventoryItemName") {
+            // arrange
+            val changeNameRequest = InventoryItemController.ChangeInventoryItemNameRequest(aggregateIdStr, "newName")
+            every { eventBus.send(any(ChangeInventoryItemName::class)) } returns Unit
+
+            // act & assert
+            mockMvc.perform(
+                post("/api/changeInventoryItemName")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(changeNameRequest))
+            ).andExpect(status().isOk)
+
+            verify(exactly = 1) { eventBus.send(any(ChangeInventoryItemName::class))}
+
+        }
+
+        test("POST /api/removeInventoryItems") {
+            // arrange
+            val removeInventoryItemRequest = InventoryItemController.RemoveInventoryItemsRequest(aggregateIdStr, 5)
+            every { eventBus.send(any(RemoveInventoryItems::class)) } returns Unit
+
+            // act & assert
+            mockMvc.perform(
+                post("/api/removeInventoryItems")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(removeInventoryItemRequest))
+            ).andExpect(status().isOk)
+
+            verify(exactly = 1) { eventBus.send(any(RemoveInventoryItems::class)) }
+        }
+
+        test("POST /api/changeMaxQuantity") {
+            // arrange
+            val changeMaxQuantityRequest = InventoryItemController.ChangeMaxQuantityRequest(aggregateIdStr, 5)
+            every { eventBus.send(any(ChangeMaxQuantity::class)) } returns Unit
+
+            // act & assert
+            mockMvc.perform(
+                post("/api/changeMaxQuantity")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(changeMaxQuantityRequest))
+            ).andExpect(status().isOk)
+
+            verify(exactly = 1) { eventBus.send(any(ChangeMaxQuantity::class)) }
+        }
+
+        test("POST /api/deactivateInventoryItem") {
+            // arrange
+            val deactivateInventoryItemRequest = InventoryItemController.DeactivateInventoryItemRequest(aggregateIdStr)
+            every { eventBus.send(any(DeactivateInventoryItem::class)) } returns Unit
+
+            // act & assert
+            mockMvc.perform(
+                post("/api/deactivateInventoryItem")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(deactivateInventoryItemRequest))
+            ).andExpect(status().isOk)
+
+            verify(exactly = 1) { eventBus.send(any(DeactivateInventoryItem::class)) }
         }
     }
 }
