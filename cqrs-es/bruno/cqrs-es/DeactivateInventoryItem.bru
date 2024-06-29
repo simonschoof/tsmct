@@ -6,6 +6,12 @@ meta {
 
 post {
   url: http://localhost:8080/api/deactivateInventoryItem
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "aggregateId": "ddd1f858-ae7f-410c-a618-3a32db55ab2d"
+  }
 }
