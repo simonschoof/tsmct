@@ -1,4 +1,3 @@
-gst
 import io.ktor.client.HttpClient
 import io.ktor.client.statement.HttpResponse
 import kotlinx.serialization.Serializable
