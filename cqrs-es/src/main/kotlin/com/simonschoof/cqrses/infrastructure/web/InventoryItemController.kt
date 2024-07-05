@@ -24,6 +24,7 @@ import java.util.UUID
 private val logger = KotlinLogging.logger {}
 
 @RestController
+//@CrossOrigin(origins = ["http://localhost:8081"])
 class InventoryItemController(
     private val eventBus: EventBus,
     private val readModelFacade: ReadModelFacade

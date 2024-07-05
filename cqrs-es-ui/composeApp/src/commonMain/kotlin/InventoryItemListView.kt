@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -40,14 +41,27 @@ import kotlinx.serialization.json.Json
 fun InventoryList(navController: NavController) {
     var showDialog by remember { mutableStateOf(false) }
     var refresh by remember { mutableStateOf(0) }
-    var inventoryItemsJson by remember { mutableStateOf(fetchAndParseInventoryItems()) }
+    var inventoryItemsJson by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(refresh) {
-        inventoryItemsJson = fetchAndParseInventoryItems()
+        coroutineScope.launch {
+            val response = fetchInventoryItems().bodyAsText()
+            inventoryItemsJson = response
+            //Log.d("InventoryState", "Inventory JSON updated: $inventoryItemsJson")
+        }
     }
 
-    val inventoryItems: List<InventoryItem> = Json.decodeFromString(inventoryItemsJson)
+    val inventoryItems: List<InventoryItem> = if (inventoryItemsJson.isBlank() || !inventoryItemsJson.startsWith("[")) {
+        listOf()
+    } else {
+        try {
+            Json.decodeFromString(inventoryItemsJson)
+        } catch (e: Exception) {
+            // Handle parsing error or log it
+            listOf()
+        }
+    }
 
     Scaffold(
         floatingActionButton = {
