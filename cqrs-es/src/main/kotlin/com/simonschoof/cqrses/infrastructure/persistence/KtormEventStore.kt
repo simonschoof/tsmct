@@ -7,7 +7,7 @@ import com.simonschoof.cqrses.domain.buildingblocks.EventBus
 import com.simonschoof.cqrses.domain.buildingblocks.EventStore
 import com.simonschoof.cqrses.infrastructure.EventQualifiedNameProvider
 import org.ktorm.database.Database
-import org.ktorm.dsl.desc
+import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.insert
@@ -40,7 +40,7 @@ class KtormEventStore(
         database.from(e)
             .select()
             .where { e.aggregateId eq aggregateId }
-            .orderBy(e.timestamp.desc())
+            .orderBy(e.timestamp.asc())
             .map {
                 val eventTypeClass =
                     Class.forName(eventQualifiedNameProvider.getQualifiedNameBySimpleName(it[e.eventType]!!))

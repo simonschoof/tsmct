@@ -7,6 +7,7 @@ import io.kotest.matchers.types.shouldBeTypeOf
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
+import java.util.Optional
 
 class InventoryItemTest : FunSpec({
     val initialName = "Initial Name"
@@ -133,5 +134,41 @@ class InventoryItemTest : FunSpec({
         updatedInventoryItem.changes.shouldNotBeEmpty()
         val inventoryItemDeactivated = updatedInventoryItem.changes.filterIsInstance<InventoryItemDeactivated>()
         inventoryItemDeactivated.count() shouldBe 1
+    }
+
+    context("load from history "){
+        test("should apply all events and return the current state of the object") {
+            val inventoryItem = InventoryItem()
+            val baseEventInfo = inventoryItem.baseEventInfo(isNew = true)
+            val event1 = InventoryItemCreated(
+                baseEventInfo,
+                "Test Item",
+                100,
+                500
+            )
+            val event2 = InventoryItemsRemoved(
+                baseEventInfo,
+                10,
+                90
+            )
+            val event3 = InventoryItemsCheckedIn(
+                baseEventInfo,
+                5,
+                95
+            )
+
+            val history = listOf(event1, event2, event3)
+
+            val result = inventoryItem.loadFromHistory(history)
+
+            result shouldBe InventoryItem(
+                id = Optional.of(baseEventInfo.aggregateId),
+                name = Optional.of("Test Item"),
+                availableQuantity = 95,
+                maxQuantity = 500,
+                isActivated = true
+            )
+
+        }
     }
 })

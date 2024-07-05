@@ -2,6 +2,7 @@ package com.simonschoof.cqrses.infrastructure.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
+import com.simonschoof.cqrses.WebSpec
 import com.simonschoof.cqrses.domain.ChangeInventoryItemName
 import com.simonschoof.cqrses.domain.ChangeMaxQuantity
 import com.simonschoof.cqrses.domain.CheckInInventoryItems
@@ -10,11 +11,9 @@ import com.simonschoof.cqrses.domain.DeactivateInventoryItem
 import com.simonschoof.cqrses.domain.RemoveInventoryItems
 import com.simonschoof.cqrses.domain.buildingblocks.AggregateId
 import com.simonschoof.cqrses.domain.buildingblocks.EventBus
-import com.simonschoof.cqrses.infrastructure.web.InventoryItemController
 import com.simonschoof.cqrses.readmodels.InventoryItemDetailsDto
 import com.simonschoof.cqrses.readmodels.InventoryItemDto
 import com.simonschoof.cqrses.readmodels.ReadModelFacade
-import com.simonschoof.cqrses.WebSpec
 import io.mockk.every
 import io.mockk.verify
 import org.springframework.http.MediaType
@@ -71,7 +70,7 @@ class InventoryItemControllerTest(
                 every { readModelFacade.getInventoryItemDetails(id) } returns Optional.of(expectedInventoryItem)
 
             // Act & Assert
-            mockMvc.perform(get("/api/inventoryItemDetails?aggregateId=$id"))
+            mockMvc.perform(get("/api/inventoryItemDetails/$id"))
                 .andExpect(status().isOk)
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedInventoryItem)))
 

@@ -2,12 +2,14 @@ package com.simonschoof.cqrses.infrastructure.persistence
 
 import com.simonschoof.cqrses.DatabaseSpec
 import com.simonschoof.cqrses.domain.buildingblocks.AggregateId
+import com.simonschoof.cqrses.domain.buildingblocks.BaseEventInfo
 import com.simonschoof.cqrses.domain.buildingblocks.Event
 import com.simonschoof.cqrses.infrastructure.EventQualifiedNameProvider
 import com.simonschoof.cqrses.infrastructure.SpringEventBus
 import io.kotest.common.runBlocking
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeTypeOf
 import org.ktorm.database.Database
 import org.ktorm.dsl.deleteAll
 import org.ktorm.dsl.from
@@ -17,6 +19,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
+import java.time.Instant
 
 @DataJpaTest(
     includeFilters = [
@@ -35,7 +38,6 @@ class KtormEventStoreTest(
     private val eventStore: KtormEventStore,
     private val database: Database
 ) : DatabaseSpec({
-
 
 
     beforeTest {
@@ -93,6 +95,34 @@ class KtormEventStoreTest(
             // Assert
             result.size shouldBe 0
         }
+    }
+
+    xtest("Events should be returned in ascending order by timestamp") {
+        // Arrange
+        val aggregateId = AggregateId.randomUUID()
+        val aggregateType = "TestAggregate"
+        val now = Instant.now()
+        val baseEventInfo = BaseEventInfo(aggregateId, aggregateType, now.minusSeconds(60))
+        val baseEventInfo2 = BaseEventInfo(aggregateId, aggregateType, now.minusSeconds(30))
+        val baseEventInfo3 = BaseEventInfo(aggregateId, aggregateType, now)
+        val event1 = RepositoryTestAggregateCreated(baseEventInfo, "First Event")
+        val event2 = RepositoryTestAggregateNameChanged(baseEventInfo2, "Second Event")
+        val event3 = RepositoryTestAggregateNameChanged(baseEventInfo3, "Third Event")
+        runBlocking {
+            eventStore.saveEvents(aggregateId, aggregateType, listOf(event3, event1, event2))
+        }
+
+        // Act
+        val result = runBlocking { eventStore.getEventsForAggregate(aggregateId) }
+
+        // Assert
+        result.size shouldBe 3
+        result[0].shouldBeTypeOf<RepositoryTestAggregateCreated>()
+        (result[0] as RepositoryTestAggregateCreated).name shouldBe "First Event"
+        result[1].shouldBeTypeOf<RepositoryTestAggregateNameChanged>()
+        (result[1] as RepositoryTestAggregateNameChanged).newName shouldBe "Second Event"
+        result[2].shouldBeTypeOf<RepositoryTestAggregateNameChanged>()
+        (result[2] as RepositoryTestAggregateNameChanged).newName shouldBe "Third Event"
     }
 })
 
