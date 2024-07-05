@@ -45,7 +45,39 @@ suspend fun addItem(
 ) {
     httpClient.post("http://${localHost}:8080/api/addInventoryItem") {
         contentType(ContentType.Application.Json)
-        body = "{\"inventoryItemName\":\"$name\",\"availableQuantity\":\"$availableQuantity\",\"maxQuantity\":\"$maxQuantity\"}"
+        body = "{\"inventoryItemName\":\"$name\",\"availableQuantity\":$availableQuantity,\"maxQuantity\":$maxQuantity}"
+    }
+}
+
+@OptIn(InternalAPI::class)
+suspend fun changeName(aggregateId: String, newName: String) {
+    httpClient.post("http://${localHost}:8080/api/changeInventoryItemName") {
+        contentType(ContentType.Application.Json)
+        body = "{\"aggregateId\":\"$aggregateId\",\"newInventoryItemName\":\"$newName\"}"
+    }
+}
+
+@OptIn(InternalAPI::class)
+suspend fun changeMaxQuantity(aggregateId: String, newMaxQuantity: Int) {
+    httpClient.post("http://${localHost}:8080/api/changeMaxQuantity") {
+        contentType(ContentType.Application.Json)
+        body = "{\"aggregateId\":\"$aggregateId\",\"newMaxQuantity\":$newMaxQuantity}"
+    }
+}
+
+@OptIn(InternalAPI::class)
+suspend fun removeItems(aggregateId: String, count: Int) {
+    httpClient.post("http://${localHost}:8080/api/removeInventoryItems") {
+        contentType(ContentType.Application.Json)
+        body = "{\"aggregateId\":\"$aggregateId\",\"count\":$count}"
+    }
+}
+
+@OptIn(InternalAPI::class)
+suspend fun checkInItems(aggregateId: String, count: Int) {
+    httpClient.post("http://${localHost}:8080/api/checkInInventoryItems") {
+        contentType(ContentType.Application.Json)
+        body = "{\"aggregateId\":\"$aggregateId\",\"count\":$count}"
     }
 }
 

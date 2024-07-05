@@ -11,17 +11,19 @@ import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,22 +50,30 @@ fun InventoryList(navController: NavController) {
         coroutineScope.launch {
             val response = fetchInventoryItems().bodyAsText()
             inventoryItemsJson = response
-            //Log.d("InventoryState", "Inventory JSON updated: $inventoryItemsJson")
         }
     }
 
-    val inventoryItems: List<InventoryItem> = if (inventoryItemsJson.isBlank() || !inventoryItemsJson.startsWith("[")) {
-        listOf()
-    } else {
-        try {
-            Json.decodeFromString(inventoryItemsJson)
-        } catch (e: Exception) {
-            // Handle parsing error or log it
+    val inventoryItems: List<InventoryItem> =
+        if (inventoryItemsJson.isBlank() || !inventoryItemsJson.startsWith("[")) {
             listOf()
+        } else {
+            try {
+                Json.decodeFromString(inventoryItemsJson)
+            } catch (e: Exception) {
+                // Handle parsing error or log it
+                listOf()
+            }
         }
-    }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Inventory Management") },
+                backgroundColor = MaterialTheme.colors.primarySurface,
+                contentColor = MaterialTheme.colors.onPrimary,
+                elevation = 4.dp
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = { showDialog = true }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Item")
@@ -90,7 +100,7 @@ fun InventoryList(navController: NavController) {
     }
 
     if (showDialog) {
-        AddItemDialog(
+        CheckInItemsDialog(
             onDismiss = { showDialog = false },
             onAddItem = { name, availableQuantity, maxQuantity ->
                 coroutineScope.launch {
@@ -141,7 +151,7 @@ fun InventoryItemRow(
 }
 
 @Composable
-fun AddItemDialog(onDismiss: () -> Unit, onAddItem: (String, Int, Int) -> Unit) {
+fun CheckInItemsDialog(onDismiss: () -> Unit, onAddItem: (String, Int, Int) -> Unit) {
     var name by remember { mutableStateOf("") }
     var availableQuantity by remember { mutableStateOf(0) }
     var maxQuantity by remember { mutableStateOf(0) }
@@ -151,13 +161,18 @@ fun AddItemDialog(onDismiss: () -> Unit, onAddItem: (String, Int, Int) -> Unit) 
         title = { Text("Add new inventory item") },
         text = {
             Column {
-                TextField(value = name, onValueChange = { name = it }, label = { Text("Name") })
+                TextField(
+                    value = name,
+                    onValueChange = { name = it.trim() },
+                    label = { Text("Name") })
                 IntegerInputWithArrows(
                     initialValue = availableQuantity,
+                    onValueChange = { availableQuantity = it },
                     label = "Available quantity"
                 )
                 IntegerInputWithArrows(
                     initialValue = maxQuantity,
+                    onValueChange = { maxQuantity = it },
                     label = "Max quantity"
                 )
             }
@@ -180,7 +195,7 @@ fun AddItemDialog(onDismiss: () -> Unit, onAddItem: (String, Int, Int) -> Unit) 
 }
 
 @Composable
-fun IntegerInputWithArrows(initialValue: Int = 0, label: String = "") {
+fun IntegerInputWithArrows(initialValue: Int = 0, label: String = "", onValueChange: (Int) -> Unit) {
     var value by remember { mutableStateOf(initialValue) }
 
     OutlinedTextField(
@@ -188,17 +203,24 @@ fun IntegerInputWithArrows(initialValue: Int = 0, label: String = "") {
         onValueChange = { newValue ->
             newValue.toIntOrNull()?.let {
                 value = it
+                onValueChange(it)
             }
         },
         singleLine = true,
         label = { Text(label) },
         leadingIcon = {
-            IconButton(onClick = { if (value > 0) value-- }) {
+            IconButton(onClick = { if (value > 0) {
+                value--
+                onValueChange(value)
+            } }) {
                 Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Decrease")
             }
         },
         trailingIcon = {
-            IconButton(onClick = { value++ }) {
+            IconButton(onClick = {
+                value++
+                onValueChange(value)
+            }) {
                 Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Increase")
             }
         }
