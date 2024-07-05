@@ -15,3 +15,7 @@ actual suspend fun fetchInventoryItems(): HttpResponse {
 
 actual suspend fun deleteItem(aggregateId: String) {
 }
+
+actual fun fetchItemDetails(aggregateId: String): String {
+    TODO("Not yet implemented")
+}

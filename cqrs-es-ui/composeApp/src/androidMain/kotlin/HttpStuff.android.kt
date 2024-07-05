@@ -30,3 +30,7 @@ actual suspend fun deleteItem(aggregateId: String) {
         body = "{\"aggregateId\":\"$aggregateId\"}"
     }
 }
+
+actual fun fetchItemDetails(aggregateId: String): String {
+    TODO("Not yet implemented")
+}

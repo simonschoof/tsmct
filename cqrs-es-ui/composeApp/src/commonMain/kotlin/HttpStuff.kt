@@ -8,5 +8,14 @@ expect suspend fun fetchInventoryItems(): HttpResponse
 
 @Serializable
 data class InventoryItem(val aggregateId: String, val name: String)
+
+@Serializable
+data class InventoryItemDetails(
+    val aggregateId: String,
+    val name: String,
+    val availableQuantity: Int,
+    val maxQuantity: Int,)
 expect fun fetchAndParseInventoryItems(): String
+
+expect fun fetchItemDetails(aggregateId: String): String
 expect suspend fun deleteItem(aggregateId: String)
