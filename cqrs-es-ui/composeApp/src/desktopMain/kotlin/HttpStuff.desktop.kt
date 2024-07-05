@@ -37,6 +37,9 @@ actual suspend fun deleteItem(aggregateId: String) {
     }
 }
 
-actual fun fetchItemDetails(aggregateId: String): String {
-    TODO("Not yet implemented")
+actual suspend fun fetchItemDetails(aggregateId: String): String {
+    val response: String = runBlocking {
+       httpClient.get("http://localhost:8080/api/inventoryItemDetails/$aggregateId").body()
+    }
+    return response
 }

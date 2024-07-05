@@ -14,6 +14,7 @@ import com.simonschoof.cqrses.readmodels.ReadModelFacade
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -129,10 +130,10 @@ class InventoryItemController(
     }
 
     @GetMapping(
-        value = ["/api/inventoryItemDetails"],
+        value = ["/api/inventoryItemDetails/{aggregateId}"],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun getInventoryItemDetails(aggregateId: String): Optional<InventoryItemDetailsDto> {
+    fun getInventoryItemDetails(@PathVariable aggregateId: String): Optional<InventoryItemDetailsDto> {
         return readModelFacade.getInventoryItemDetails(UUID.fromString(aggregateId))
     }
 }

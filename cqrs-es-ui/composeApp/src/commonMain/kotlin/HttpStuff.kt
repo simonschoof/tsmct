@@ -17,5 +17,5 @@ data class InventoryItemDetails(
     val maxQuantity: Int,)
 expect fun fetchAndParseInventoryItems(): String
 
-expect fun fetchItemDetails(aggregateId: String): String
+expect suspend fun fetchItemDetails(aggregateId: String): String
 expect suspend fun deleteItem(aggregateId: String)

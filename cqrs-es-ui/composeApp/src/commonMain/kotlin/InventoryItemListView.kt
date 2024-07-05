@@ -24,12 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun InventoryList() {
+fun InventoryList(navController: NavController) {
     var refresh by remember { mutableStateOf(0) }
     var inventoryItemsJson by remember { mutableStateOf(fetchAndParseInventoryItems()) }
 
@@ -53,7 +54,7 @@ fun InventoryList() {
             LazyColumn {
                 // Create a row for each item
                 items(inventoryItems) { item ->
-                    InventoryItemRow(item, refresh) { refresh++ }
+                    InventoryItemRow(item, refresh, navController) { refresh++ }
                 }
             }
         }
@@ -61,7 +62,7 @@ fun InventoryList() {
 }
 
 @Composable
-fun InventoryItemRow(item: InventoryItem, refresh: Int, onRefresh: () -> Unit) {
+fun InventoryItemRow(item: InventoryItem, refresh: Int, navController: NavController, onRefresh: () -> Unit) {
 val coroutineScope = rememberCoroutineScope()
     // Display the item in a row
     Row(modifier = Modifier.padding(8.dp)) {
@@ -79,7 +80,9 @@ val coroutineScope = rememberCoroutineScope()
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.width(4.dp))
-        IconButton(onClick = { /* Handle detail page navigation here */ }) {
+        IconButton(onClick = {
+            navController.navigate("${MainDestinations.DETAIL_PAGE_ROUTE}/${item.aggregateId}")
+        }) {
             Icon(Icons.Filled.Edit, contentDescription = "Detail Page")
         }
         Spacer(modifier = Modifier.width(4.dp))
@@ -94,10 +97,10 @@ val coroutineScope = rememberCoroutineScope()
     }
 }
 
-@Preview
-@Composable
-fun PreviewInventoryList() {
-    val inventoryItemsJson =
-        "[{\"aggregateId\":\"uuid\",\"name\":\"name\"},{\"aggregateId\":\"uuid2\",\"name\":\"name2\"}]"
-    InventoryList()
-}
+//@Preview
+//@Composable
+//fun PreviewInventoryList() {
+//    val inventoryItemsJson =
+//        "[{\"aggregateId\":\"uuid\",\"name\":\"name\"},{\"aggregateId\":\"uuid2\",\"name\":\"name2\"}]"
+//    InventoryList(NavController())
+//}
