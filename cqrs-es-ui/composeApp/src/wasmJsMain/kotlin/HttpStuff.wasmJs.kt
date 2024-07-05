@@ -19,3 +19,10 @@ actual suspend fun deleteItem(aggregateId: String) {
 actual suspend fun fetchItemDetails(aggregateId: String): String {
     TODO("Not yet implemented")
 }
+
+actual suspend fun addItem(
+    name: String,
+    availableQuantity: Int,
+    maxQuantity: Int
+) {
+}

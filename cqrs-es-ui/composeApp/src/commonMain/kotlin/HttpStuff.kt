@@ -19,3 +19,5 @@ expect fun fetchAndParseInventoryItems(): String
 
 expect suspend fun fetchItemDetails(aggregateId: String): String
 expect suspend fun deleteItem(aggregateId: String)
+
+expect suspend fun addItem(name: String, availableQuantity: Int, maxQuantity: Int)

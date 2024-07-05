@@ -43,3 +43,15 @@ actual suspend fun fetchItemDetails(aggregateId: String): String {
     }
     return response
 }
+
+@OptIn(InternalAPI::class)
+actual suspend fun addItem(
+    name: String,
+    availableQuantity: Int,
+    maxQuantity: Int
+) {
+    httpClient.post("http://localhost:8080/api/addInventoryItem") {
+        contentType(ContentType.Application.Json)
+        body = "{\"inventoryItemName\":\"$name\",\"availableQuantity\":\"$availableQuantity\",\"maxQuantity\":\"$maxQuantity\"}"
+    }
+}

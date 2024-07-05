@@ -8,6 +8,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
 
 actual val httpClient: HttpClient
     get() = HttpClient(OkHttp)
@@ -36,4 +37,16 @@ actual suspend fun fetchItemDetails(aggregateId: String): String {
         httpClient.get("http://10.0.2.2:8080/api/inventoryItemDetails/$aggregateId").body()
     }
     return response
+}
+
+@OptIn(InternalAPI::class)
+actual suspend fun addItem(
+    name: String,
+    availableQuantity: Int,
+    maxQuantity: Int
+) {
+    httpClient.post("http://10.0.2.2:8080/api/addInventoryItem") {
+        contentType(ContentType.Application.Json)
+        body = Json.encodeToString(InventoryItemDetails.serializer(), InventoryItemDetails("", name, availableQuantity, maxQuantity))
+    }
 }
