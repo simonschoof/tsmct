@@ -20,7 +20,7 @@ val springMockkVersion = "4.0.2"
 
 plugins {
 	id("org.springframework.boot") version "3.3.1"
-	id("io.spring.dependency-management") version "1.1.5"
+	id("io.spring.dependency-management") version "1.1.6"
 	id("com.adarshr.test-logger") version "4.0.0"
 	id("org.flywaydb.flyway") version "10.15.2"
 	id("com.github.ben-manes.versions") version "0.51.0"
