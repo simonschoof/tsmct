@@ -23,3 +23,12 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  cqrs-es-ui:
+    build:
+      context: ./cqrs-es-ui
+    ports:
+      - "8081:8080"
+    depends_on:
+      cqrs-es:
+        condition: service_started
