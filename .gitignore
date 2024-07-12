@@ -1,4 +1,4 @@
-HELP.md
+cqrs-es/HELP.md
 .gradle
 build/
 !**/src/main/**/build/
