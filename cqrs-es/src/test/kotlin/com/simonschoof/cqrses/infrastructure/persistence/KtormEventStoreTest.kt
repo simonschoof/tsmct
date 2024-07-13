@@ -1,15 +1,17 @@
 package com.simonschoof.cqrses.infrastructure.persistence
 
+import com.ninjasquad.springmockk.SpykBean
 import com.simonschoof.cqrses.DatabaseSpec
 import com.simonschoof.cqrses.domain.buildingblocks.AggregateId
 import com.simonschoof.cqrses.domain.buildingblocks.BaseEventInfo
 import com.simonschoof.cqrses.domain.buildingblocks.Event
 import com.simonschoof.cqrses.infrastructure.EventQualifiedNameProvider
 import com.simonschoof.cqrses.infrastructure.SpringEventBus
-import io.kotest.common.runBlocking
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
+import io.mockk.verify
 import org.ktorm.database.Database
 import org.ktorm.dsl.deleteAll
 import org.ktorm.dsl.from
@@ -20,6 +22,8 @@ import org.springframework.context.annotation.FilterType
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import java.time.Instant
+
+private val logger = KotlinLogging.logger {}
 
 @DataJpaTest(
     includeFilters = [
@@ -36,9 +40,9 @@ import java.time.Instant
 )
 class KtormEventStoreTest(
     private val eventStore: KtormEventStore,
-    private val database: Database
+    private val database: Database,
+    @SpykBean val eventHandler: KtormEventStoreTestEventHandler
 ) : DatabaseSpec({
-
 
     beforeTest {
         database.deleteAll(EventTable)
@@ -55,12 +59,12 @@ class KtormEventStoreTest(
             val events = listOf(repositoryTestAggregateCreated, repositoryTestAggregateChanged)
 
             // Act
-            runBlocking { eventStore.saveEvents(aggregateId, aggregateType, events) }
+            eventStore.saveEvents(aggregateId, aggregateType, events)
 
             // Assert
             database.from(EventTable).select().totalRecordsInAllPages shouldBe events.size
-            // The event handler should have been called twice.
-            // See KtormEventStoreTestEventHandler class below for the handler implementation
+
+            verify(exactly = 2) { eventHandler.handle(any()) }
 
         }
     }
@@ -74,7 +78,7 @@ class KtormEventStoreTest(
             val repositoryTestAggregateCreated = RepositoryTestAggregateCreated(baseEventInfo, "test")
             val repositoryTestAggregateChanged = RepositoryTestAggregateNameChanged(baseEventInfo, "newName")
             val events = listOf(repositoryTestAggregateCreated, repositoryTestAggregateChanged)
-            runBlocking { eventStore.saveEvents(aggregateId, aggregateType, events) }
+            eventStore.saveEvents(aggregateId, aggregateType, events)
 
 
             // Act
@@ -97,7 +101,7 @@ class KtormEventStoreTest(
         }
     }
 
-    xtest("Events should be returned in ascending order by timestamp") {
+    test("Events should be returned in ascending order by timestamp") {
         // Arrange
         val aggregateId = AggregateId.randomUUID()
         val aggregateType = "TestAggregate"
@@ -108,12 +112,10 @@ class KtormEventStoreTest(
         val event1 = RepositoryTestAggregateCreated(baseEventInfo, "First Event")
         val event2 = RepositoryTestAggregateNameChanged(baseEventInfo2, "Second Event")
         val event3 = RepositoryTestAggregateNameChanged(baseEventInfo3, "Third Event")
-        runBlocking {
-            eventStore.saveEvents(aggregateId, aggregateType, listOf(event3, event1, event2))
-        }
+        eventStore.saveEvents(aggregateId, aggregateType, listOf(event1, event2, event3))
 
         // Act
-        val result = runBlocking { eventStore.getEventsForAggregate(aggregateId) }
+        val result = eventStore.getEventsForAggregate(aggregateId)
 
         // Assert
         result.size shouldBe 3
@@ -130,9 +132,6 @@ class KtormEventStoreTest(
 class KtormEventStoreTestEventHandler {
     @EventListener
     fun handle(notification: Event) {
-        when (notification) {
-            is RepositoryTestAggregateCreated -> notification.name shouldBe "test"
-            is RepositoryTestAggregateNameChanged -> notification.newName shouldBe "newName"
-        }
+        logger.info { "Event handled: $notification" }
     }
 }

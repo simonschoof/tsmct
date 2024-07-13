@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration
 @ActiveProfiles("test")
 @ContextConfiguration(
     classes = [
-        com.simonschoof.cqrses.CqrsES::class
+        CqrsES::class
     ]
 )
 abstract class WebSpec : FunSpec() {

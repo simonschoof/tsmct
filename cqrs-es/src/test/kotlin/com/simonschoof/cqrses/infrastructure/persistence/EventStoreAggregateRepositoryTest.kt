@@ -1,11 +1,10 @@
 package com.simonschoof.cqrses.infrastructure.persistence
 
+import com.simonschoof.cqrses.DatabaseSpec
 import com.simonschoof.cqrses.domain.buildingblocks.AggregateId
 import com.simonschoof.cqrses.infrastructure.AggregateQualifiedNameProvider
 import com.simonschoof.cqrses.infrastructure.EventQualifiedNameProvider
 import com.simonschoof.cqrses.infrastructure.SpringEventBus
-import com.simonschoof.cqrses.DatabaseSpec
-import io.kotest.common.runBlocking
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -47,7 +46,7 @@ class EventStoreAggregateRepositoryTest(
             val aggregate = RepositoryTestAggregate.invoke("test")
 
             // Act
-            runBlocking { repository.save(aggregate) }
+            repository.save(aggregate)
 
             // Assert
             database.from(EventTable).select().totalRecordsInAllPages shouldBe 1
@@ -59,7 +58,7 @@ class EventStoreAggregateRepositoryTest(
             every { aggregate.id } returns Optional.empty()
 
             // Act
-            runBlocking { repository.save(aggregate) }
+            repository.save(aggregate)
 
             // Assert
             database.from(EventTable).select().totalRecordsInAllPages shouldBe 0
@@ -72,7 +71,7 @@ class EventStoreAggregateRepositoryTest(
             val aggregate =
                 RepositoryTestAggregate.invoke("test").changeName("newName")
 
-            runBlocking { repository.save(aggregate) }
+            repository.save(aggregate)
 
             // Act
             val result = repository.getById(aggregate.id.get())

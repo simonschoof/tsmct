@@ -17,7 +17,6 @@ import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 import org.springframework.stereotype.Component
 import java.time.Clock
-import java.time.Instant
 
 @Component
 class KtormEventStore(
@@ -55,7 +54,7 @@ class KtormEventStore(
             set(e.eventType, event::class.simpleName)
             set(e.aggregateId, aggregateId)
             set(e.aggregateType, aggregateType)
-            set(e.timestamp, Instant.now(clock))
+            set(e.timestamp, event.timestamp)
             set(e.data, event)
         }
     }
