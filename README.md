@@ -2,7 +2,7 @@
 
 TSMCT is a comprehensive project designed to showcase the implementation of CQRS (Command Query Responsibility Segregation) and ES (Event Sourcing) patterns, along with a dedicated UI component to interact with the system. This project is split into two main parts: `cqrs-es` for the backend logic and `cqrs-es-ui` for the frontend interface.
 
-The project is built using Kotlin for the backend and the frontend using Kotlin Multiplatform Compose. The backend part is implemented using the CQRS and ES patterns with the simplest possible thing from Greg Young as reference. The project is slightly more complex in a way that it uses a PostgreSQL database and the Spring ApplicationEventPublisher to publish events.
+The project is built using Kotlin for the backend and the frontend using Kotlin Multiplatform Compose. The backend part is implemented using the CQRS and ES patterns with the [simplest possible thing from Greg Young](https://github.com/gregoryyoung/m-r/tree/master) as reference. The project is slightly more complex in a way that it uses a PostgreSQL database and the Spring ApplicationEventPublisher to publish events.
 
 ## Project Structure
 
