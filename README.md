@@ -8,7 +8,7 @@ The project is built using Kotlin for the backend and the frontend using Kotlin 
 
 - **cqrs-es**: This is the backend part of the project, implementing CQRS and ES patterns. It handles commands, queries, and events to ensure that the system's write and read operations are decoupled and optimized for scalability and maintainability. As underlying technologies, it uses Spring Boot, Kotlin, and PostgreSQL. The backend can be run with an [embedded PostgreSQL database](https://github.com/zonkyio/embedded-postgres) or use an external database. To use an external database the argument `--use-external-postgres` has to be set and the respective connection properties have to be configured. This is just done for localhost in the moment.
   
-- **cqrs-es-ui**: The frontend part of the project, providing a user interface to interact with the backend. It's designed to demonstrate how commands and queries can be issued from a user interface to a system built on the CQRS and ES principles. The frontend is built using Kotlin Multiplatform Compose.
+- **cqrs-es-ui**: The frontend part of the project, providing a user interface to interact with the backend. It's designed to demonstrate how commands and queries can be issued from a user interface to a system built on the CQRS and ES principles. The frontend is built using [Kotlin Multiplatform Compose](https://www.jetbrains.com/lp/compose-multiplatform/).
 
 ## Prerequisites
 
