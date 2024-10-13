@@ -40,10 +40,6 @@ class InventoryItemListView(
     @EventListener
     fun handle(event: InventoryItemNameChanged) {
         logger.info { "changed name of inventory item to name ${event.newName}" }
-        val readModelInventoryItemEntity = ReadModelInventoryItemEntity {
-            aggregateId = event.aggregateId
-            name = event.newName
-        }
         database.inventoryItems.find { it.aggregateId eq event.aggregateId }?.let {
             it.name = event.newName
             it.flushChanges()
