@@ -13,19 +13,19 @@ val kotlinLoggingVersion = "7.0.3"
 val flywayVersion = "10.20.1"
 val flywayTestVersion = "10.0.0"
 val reactiveStreamVersion = "1.0.4"
-val reactorCoreVersion = "3.6.11"
+val reactorCoreVersion = "3.7.0"
 val kotlinxCoroutinesVersion = "1.9.0"
 val mockkVersion = "1.13.13"
 val springMockkVersion = "4.0.2"
 
 plugins {
-	id("org.springframework.boot") version "3.3.5"
+	id("org.springframework.boot") version "3.4.0"
 	id("io.spring.dependency-management") version "1.1.6"
 	id("com.adarshr.test-logger") version "4.0.0"
 	id("org.flywaydb.flyway") version "10.20.1"
 	id("com.github.ben-manes.versions") version "0.51.0"
-	kotlin("jvm") version "2.0.20"
-	kotlin("plugin.spring") version "2.0.20"
+	kotlin("jvm") version "2.1.0"
+	kotlin("plugin.spring") version "2.1.0"
 }
 
 group = "com.simonschoof"
