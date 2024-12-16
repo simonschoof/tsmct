@@ -30,6 +30,19 @@ class InventoryItemTest : FunSpec({
         )
     }
 
+    test("InventoryItem should be created with the correct values") {
+        // Assert
+        sut.id.isPresent shouldBe true
+        sut.changes.shouldNotBeEmpty()
+        sut.changes.first().shouldBeTypeOf<InventoryItemCreated>()
+        sut.changes.first() as InventoryItemCreated shouldBe InventoryItemCreated(
+            sut.baseEventInfo(),
+            initialName,
+            initialAvailableQuantity,
+            initialMaxQuantity
+        )
+    }
+
     test("changeName should update the name of the InventoryItem") {
         // Arrange
         val expected = "New Name"
@@ -39,12 +52,10 @@ class InventoryItemTest : FunSpec({
 
         // Assert
         updatedInventoryItem.changes.shouldNotBeEmpty()
-        updatedInventoryItem.changes.first().shouldBeTypeOf<InventoryItemCreated>()
-        updatedInventoryItem.changes.first() as InventoryItemCreated shouldBe InventoryItemCreated(
+        updatedInventoryItem.changes.last().shouldBeTypeOf<InventoryItemNameChanged>()
+        updatedInventoryItem.changes.last() as InventoryItemNameChanged shouldBe InventoryItemNameChanged(
             sut.baseEventInfo(),
-            initialName,
-            initialAvailableQuantity,
-            initialMaxQuantity
+            expected
         )
     }
 
