@@ -14,7 +14,7 @@ val flywayVersion = "11.1.0"
 val flywayTestVersion = "10.0.0"
 val reactiveStreamVersion = "1.0.4"
 val reactorCoreVersion = "3.7.1"
-val kotlinxCoroutinesVersion = "1.9.0"
+val kotlinxCoroutinesVersion = "1.10.1"
 val mockkVersion = "1.13.14"
 val springMockkVersion = "4.0.2"
 
