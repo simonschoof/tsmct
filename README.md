@@ -1,6 +1,6 @@
 # The Slightly More Complex Thingy (TSMCT)
 
-You can read more about this project on my blog: [The Slightly More Complex Thingy](https://www.marcphilipp.de/blog/2022/02/06/the-slightly-more-complex-thingy/)
+You can read more about this project on my blog: [The Slightly More Complex Thingy](https://simonschoof.com/post/cqrs-es-kotlin-backend/)
 
 TSMCT is a comprehensive project designed to showcase the implementation of CQRS (Command Query Responsibility Segregation) and ES (Event Sourcing) patterns, along with a dedicated UI component to interact with the system. This project is split into two main parts: `cqrs-es` for the backend logic and `cqrs-es-ui` for the frontend interface.
 
